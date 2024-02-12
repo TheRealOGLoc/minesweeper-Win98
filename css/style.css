@@ -1,0 +1,153 @@
+:root {
+    --beginner-width: 9;
+    --beginner-height: 9;
+    --intermediate-width: 16;
+    --intermediate-height: 16;
+    --expert-width: 30;
+    --expert-height: 16;
+    --mine-size: 25px;
+}
+
+body {
+    box-sizing: border-box;
+}
+
+.mines {
+    display: grid;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+.mine {
+    height: var(--mine-size);
+    width: var(--mine-size);
+    background-image: url("/assets/icons/unopened-square.svg");
+}
+
+.mine-row {
+    height: var(--mine-size);
+    width:auto;
+}
+
+.unopened {
+    height: var(--mine-size);
+    width: var(--mine-size);
+    background-image: url("/assets/icons/unopened-square.svg");
+}
+
+.unopened:hover {
+    cursor: pointer;
+}
+
+/*
+.test {
+    margin: 10px;
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/unopened-square.svg");
+}
+
+.overlay {
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/flag.svg");
+}
+
+.miss {
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/flag-missed.svg");
+}
+
+.mine {
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/bomb.svg");
+}
+.explode {
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/bomb-explode.svg");
+    opacity: 50%;
+}
+
+.bomb {
+    margin: 10px;
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/bomb.svg");
+}
+
+.unopen {
+    margin: 10px;
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/unopened-square.svg");
+}
+
+.zero {
+    margin: 10px;
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-0.svg");
+}
+
+.one {
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-1.svg");
+}
+
+.two {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-2.svg");
+}
+
+.three {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-3.svg");
+}
+
+.four {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-4.svg");
+}
+
+.five {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-5.svg");
+}
+
+.six {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-6.svg");
+} */
+
+.seven {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-7.svg");
+}
+
+.eight {
+
+    height: var(--mine-length);
+    width: var(--mine-length);
+    background-image: url("/assets/icons/number-8.svg");
+}
+
+
+
+
