@@ -5,7 +5,7 @@
     --intermediate-height: 16;
     --expert-width: 30;
     --expert-height: 16;
-    --mine-size: 25px;
+    --mine-size: 13px;
 }
 
 body {
@@ -13,8 +13,10 @@ body {
     background-color: antiquewhite;
 }
 
+* {
+    background-size: contain;
+}
 .mines {
-    display: grid;
     display: flex;
     flex-direction: column;
     border-top: 3px solid grey;
@@ -40,118 +42,19 @@ body {
     background-image: url("/assets/icons/unopened-square.svg");
 }
 
+.flag {
+    height: var(--mine-size);
+    width: var(--mine-size);
+    background-image: url("/assets/icons/flag.svg");
+}
+
 .unopened:hover {
     cursor: pointer;
 }
 
-/*
-.test {
-    margin: 10px;
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/unopened-square.svg");
-}
-
-.overlay {
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/flag.svg");
-}
-
-.miss {
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/flag-missed.svg");
-}
-
-.mine {
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/bomb.svg");
-}
-.explode {
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/bomb-explode.svg");
-    opacity: 50%;
-}
-
-.bomb {
-    margin: 10px;
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/bomb.svg");
-}
-
-.unopen {
-    margin: 10px;
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/unopened-square.svg");
-}
-
 .zero {
-    margin: 10px;
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-0.svg");
+    height: var(--mine-size);
+    width: var(--mine-size);
+    background-image: url("/assets/icons/one.svg");
+
 }
-
-.one {
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-1.svg");
-}
-
-.two {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-2.svg");
-}
-
-.three {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-3.svg");
-}
-
-.four {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-4.svg");
-}
-
-.five {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-5.svg");
-}
-
-.six {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-6.svg");
-} */
-
-.seven {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-7.svg");
-}
-
-.eight {
-
-    height: var(--mine-length);
-    width: var(--mine-length);
-    background-image: url("/assets/icons/number-8.svg");
-}
-
-
-
-

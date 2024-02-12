@@ -46,7 +46,7 @@ const mineStatus = {
     eightMine: 8
 }
 
-const mineSize = 25;
+const mineSize = 13; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
 const state = {
@@ -58,16 +58,14 @@ const state = {
 /*----- cached elements  -----*/
 const minesEl = document.querySelector(".mines");
 
-/*----- event listeners -----*/
-
-
 /*----- functions -----*/
 const init = function() {
-    state.size = beginnerSize;
-    state.level = level.beginner;
+    state.size = expertSize;
+    state.level = level.expert;
     setMinesSize();
     createMinesArray(state.size);
-    allocateMines();
+    allocateMines(5, 5); ////////////////////////////also change here to avoid first step explosion
+    modifyMinesArray();
     render();
 }
 
@@ -91,14 +89,17 @@ const createMinesArray = function(size) {
 }
 
 // Randomly allocate the mines into the array
-const allocateMines = function() {
+/////////////////////add argument to avoid first step explosion
+const allocateMines = function(firstRow, firstColumn) { 
     const level = state.level;
     let count = 0;
     while (count != level) {
-        const row = Math.floor(Math.random() * 9);
-        const column = Math.floor(Math.random() * 9);
+        const row = Math.floor(Math.random() * state.size.row);
+        const column = Math.floor(Math.random() * state.size.column);
         // if the target is not mine, set it to mine
-        if (state.mines[row][column] !== mineStatus.mine) {
+        if (row === firstRow && column === firstColumn) {
+            continue;
+        } else if (state.mines[row][column] !== mineStatus.mine) {
             state.mines[row][column] = mineStatus.mine;
             count++;
         } else {
@@ -118,11 +119,12 @@ const calculateNearbyMines = function(row, column) {
     }
     // calculate nearby mines by checking the nearby location with differect direction 
     for (const direction in offsetDirection) {
-        const targetRow = row + direction[0];
-        const targetColumn = column + direction[1];
+        const targetRow = row + offsetDirection[direction][0];
+        const targetColumn = column + offsetDirection[direction][1];
         // If the target location is not out of the index boundary
         // and is a mine, increase count number
-        if (mines[targetRow][targetColumn] !== undefined &&
+        if (mines[targetRow] !== undefined &&
+            mines[targetRow][targetColumn] !== undefined &&
             mines[targetRow][targetColumn] === mineStatus.mine) {
                 minesNearby++
         }
@@ -130,6 +132,7 @@ const calculateNearbyMines = function(row, column) {
     return minesNearby;
 }
 
+// Modify the mines array by using calculateNearbyMines 
 const modifyMinesArray = function() {
     const row = state.size.row;
     const column = state.size.column;
@@ -141,10 +144,7 @@ const modifyMinesArray = function() {
     }
 }
 
-// Render all the content
-const render = function() {
-    const row = state.size.row;
-    const column = state.size.column;
+const rendMinesField = function(row, column) {
     for (let i = 0; i < row; i++) {
         const eachRowEl = document.createElement("div");
         eachRowEl.style.display = "flex";
@@ -160,4 +160,13 @@ const render = function() {
     }
 }
 
+// Render all the content
+const render = function() {
+    const row = state.size.row;
+    const column = state.size.column;
+    rendMinesField(row, column);
+}
+
 init();
+
+/*----- event listeners -----*/
