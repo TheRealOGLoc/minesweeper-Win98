@@ -10,13 +10,17 @@
 
 body {
     box-sizing: border-box;
+    background-color: antiquewhite;
 }
 
 .mines {
     display: grid;
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    border-top: 3px solid grey;
+    border-left: 3px solid grey;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
 }
 
 .mine {
