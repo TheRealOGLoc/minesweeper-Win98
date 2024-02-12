@@ -42,11 +42,24 @@ body {
     background-image: url("/assets/icons/unopened-square.svg");
 }
 
+.pressing {
+    height: var(--mine-size);
+    width: var(--mine-size);
+    background-image: url("/assets/icons/pressed.svg");
+}
+
 .flag {
     height: var(--mine-size);
     width: var(--mine-size);
     background-image: url("/assets/icons/flag.svg");
 }
+
+.one {
+    height: var(--mine-size);
+    width: var(--mine-size);
+    background-image: url("/assets/icons/one.svg");
+}
+
 
 .unopened:hover {
     cursor: pointer;
