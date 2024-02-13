@@ -10,14 +10,14 @@ const intermediateSize = {
 }
 
 const expertSize = {
-    row: 16,
+    row: 20,
     column: 30
 }
 
 const level = {
     beginner: 10,
-    intermediate: 40,
-    expert: 60,
+    intermediate: 30,
+    expert: 100,
 }
 
 const offsetDirection = {
@@ -67,6 +67,12 @@ const mineClassName = [
     "mine"
 ]
 
+const winStatus = {
+    playing: 0,
+    win: 1,
+    lose: -1,
+}
+
 const mineSize = 13; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
@@ -78,6 +84,7 @@ const state = {
     minesCreated: false,
     statusCreated: false,
     time: 0,
+    win: null,
 };
 
 /*----- cached elements  -----*/
@@ -87,6 +94,7 @@ const minesEl = document.querySelector(".mines");
 const init = function() {
     state.size = expertSize;
     state.level = level.expert;
+    state.win = winStatus.playing;
     setMinesSize();
     createMinesArray(state.size);
     allocateMines(5, 5);
@@ -242,59 +250,33 @@ const openTargetCell = function(row, column) {
     }
 }
 
-// const attemptToOpenNearbyCell = function(row, column) {
-//     const status = state.status[row][column];
-//     if (mineClassName.some((name) => name === status)) {
-
-//     }
-// }
-
-// // Open nearby zero mine cells, recursive function
-// const openNearbyZeroMineCell = function(row, column, scannedCell) {
-//     const mines = state.mines;
-//     const targetMine = mines[row][column]
-//     // If the target cell is zero mine and it is not in the scannedCell
-//     if (targetMine === mineStatus.zeroMine && !scannedCell.some(cell => cell[0] === row && cell[1] === column)) {
-//         // Push it into the scannedCell to prevent 
-//         scannedCell.push([row, column]);
-//         for (const direction in offsetDirection) {
-//             const nearbyTargetRow = row + offsetDirection[direction][0];
-//             const nearbyTargetColumn = column + offsetDirection[direction][1];
-//             // If the target location is not out of the index boundary
-//             if (mines[nearbyTargetRow] !== undefined &&
-//                 mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
-//                     openTargetCell(nearbyTargetRow, nearbyTargetColumn);
-//                     openNearbyZeroMineCell(nearbyTargetRow, nearbyTargetColumn, scannedCell);
-//             }
-//         }
-//     } else {
-//         return;
-//     }
-// }
 
 // Open nearby zero mine cells, recursive function
 const openNearbyZeroMineCell = function(row, column, scannedCell) {
     const mines = state.mines;
     const targetMine = mines[row][column];
-    // If the target cell is zero mine and it is not in the scannedCell
+    // If the target cell is not zero mine and it is in the scannedCell
     if (targetMine !== mineStatus.zeroMine || scannedCell.some(cell => cell[0] === row && cell[1] === column)) {
-        // Push it into the scannedCell to prevent 
+        // Imme return
         return;
     } 
+    // Push it into the scannedCell to prevent exceeding maximum resursion depth
     scannedCell.push([row, column]);
     for (const direction in offsetDirection) {
         const nearbyTargetRow = row + offsetDirection[direction][0];
         const nearbyTargetColumn = column + offsetDirection[direction][1];
         // If the target location is not out of the index boundary
         if (mines[nearbyTargetRow] !== undefined &&
-            mines[nearbyTargetRow][nearbyTargetColumn] !== undefined &&
-            !scannedCell.some(cell => cell[0] === nearbyTargetRow && cell[1] === nearbyTargetColumn)) {
+            mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
                 openTargetCell(nearbyTargetRow, nearbyTargetColumn);
                 openNearbyZeroMineCell(nearbyTargetRow, nearbyTargetColumn, scannedCell);
         }
     }
 }
 
+const showAllMines = function() {
+
+}
 
 // Right click to put a flag on a cell 
 const flagTargetCell = function(row, column) {
@@ -317,26 +299,64 @@ const convertTargetIDtoPosition = function(target) {
     return [parseInt(position[0]), parseInt(position[1])]
 }
 
+// When mouse down
 const changeImageToPress = function(evt) {
     const target = evt.target;
     const button = evt.button;
     const id = convertTargetIDtoPosition(target);
     const status = state.status[id[0]][id[1]];
+    const mines = state.mines;
+    // If the target cell is unopened cell
     if (status === statusName.unopened && button === 0) {
         target.classList.remove(statusName.unopened);
         target.classList.add(statusName.pressing);
-    }
+    
+    } 
+    // If the target cell is opened number cell
+    changeNearbyImage(id[0], id[1], status, mines, false);
 }
 
-
-
+// When mouse up
 const changeImageToUnopen = function(evt) {
     const target = evt.target;
     const button = evt.button;
+    const id = convertTargetIDtoPosition(target);
+    const status = state.status[id[0]][id[1]];
+    const mines = state.mines;
+    // If the target cell is in pressing condition
     if (button === 0 && target.classList.contains(statusName.pressing)) {
         target.classList.remove(statusName.pressing);
         target.classList.add(statusName.unopened);
     }
+    // If the target cell is opened number cell
+    changeNearbyImage(id[0], id[1], status, mines, true);
+}
+
+const changeNearbyImage = function(row, column, status, mines, releaseMouse) {
+    let removeStatus = statusName.unopened;
+    let addStatus = statusName.pressing;
+    if (releaseMouse) {
+        removeStatus = statusName.pressing;
+        addStatus = statusName.unopened;
+    }
+    if (mineClassName.some(name => name === status && status != mineClassName[9])) {
+        for (const direction in offsetDirection) {
+            const nearbyTargetRow = row + offsetDirection[direction][0];
+            const nearbyTargetColumn = column + offsetDirection[direction][1];
+            // If the target location is not out of the index boundary
+            if (mines[nearbyTargetRow] !== undefined &&
+                mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
+                    const nearbyStatus = state.status[nearbyTargetRow][nearbyTargetColumn];
+                    // If the nearby cell is unopened
+                    if (nearbyStatus === statusName.unopened) {
+                        const nearbyTarget = getTargetElwithPosition(nearbyTargetRow, nearbyTargetColumn);
+                        nearbyTarget.classList.remove(removeStatus);
+                        nearbyTarget.classList.add(addStatus);
+                }
+            }
+        }
+    }
+
 }
 
 // When pressing cell instead of clicking it.
