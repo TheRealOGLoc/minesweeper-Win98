@@ -10,11 +10,23 @@
     --icon-size: 12px;
     --title-bar-height: 13px;
     --game-name-font-size: 8px;
+    --letter-space: 0.7px;
+}
+
+@font-face {
+    font-family: win98;
+    src: url(../assets/fonts/win98.ttf);
 }
 
 body {
     box-sizing: border-box;
     background-color: antiquewhite;
+    font-weight: 550;
+}
+
+* {
+    font-family: win98;
+    letter-spacing: var(--letter-space);
 }
 
 .game {
