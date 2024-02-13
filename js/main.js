@@ -73,7 +73,7 @@ const winStatus = {
     lose: -1,
 }
 
-const mineSize = 13; // change the mineSize must change the size in css as well
+const mineSize = 10; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
 const state = {
@@ -85,6 +85,7 @@ const state = {
     statusCreated: false,
     time: 0,
     win: null,
+    firstClick: false,
 };
 
 /*----- cached elements  -----*/
@@ -333,7 +334,7 @@ const openNearbyZeroMineCell = function(row, column, scannedCell) {
     }
 }
 
-//
+// Show all mine and check is the flag is correct
 const showAllMinesAndCheckFlag = function() {
     const mines = state.mines;
     const status = state.status;
@@ -381,14 +382,17 @@ const changeImageToPress = function(evt) {
     const id = convertTargetIDtoPosition(target);
     const status = state.status[id[0]][id[1]];
     const mines = state.mines;
-    // If the target cell is unopened cell
-    if (status === statusName.unopened && button === 0) {
-        target.classList.remove(statusName.unopened);
-        target.classList.add(statusName.pressing);
+    if (state.win === winStatus.playing) {
+        // If the target cell is unopened cell
+        if (status === statusName.unopened && button === 0) {
+            target.classList.remove(statusName.unopened);
+            target.classList.add(statusName.pressing);
+        
+        } 
+        // If the target cell is opened number cell
+        changeNearbyImage(id[0], id[1], status, mines, false);
+    }
     
-    } 
-    // If the target cell is opened number cell
-    changeNearbyImage(id[0], id[1], status, mines, false);
 }
 
 // When mouse up
@@ -398,16 +402,19 @@ const changeImageToUnopen = function(evt) {
     const id = convertTargetIDtoPosition(target);
     const status = state.status[id[0]][id[1]];
     const mines = state.mines;
-    // If the target cell is in pressing condition
-    if (button === 0 && target.classList.contains(statusName.pressing)) {
-        target.classList.remove(statusName.pressing);
-        target.classList.add(statusName.unopened);
+    if (state.win === winStatus.playing) {
+        // If the target cell is in pressing condition
+        if (button === 0 && target.classList.contains(statusName.pressing)) {
+            target.classList.remove(statusName.pressing);
+            target.classList.add(statusName.unopened);
+        }
+        // If the target cell is opened number cell
+        changeNearbyImage(id[0], id[1], status, mines, true);
     }
-    // If the target cell is opened number cell
-    changeNearbyImage(id[0], id[1], status, mines, true);
+    
 }
 
-// Change the view of nearby cell when clicking an opened none zero cell
+// Change the view of nearby cell when clicking an opened cell
 const changeNearbyImage = function(row, column, status, mines, releaseMouse) {
     let removeStatus = statusName.unopened;
     let addStatus = statusName.pressing;
@@ -415,6 +422,7 @@ const changeNearbyImage = function(row, column, status, mines, releaseMouse) {
         removeStatus = statusName.pressing;
         addStatus = statusName.unopened;
     }
+    // If the target cell is not a mine
     if (mineClassName.some(name => name === status && status != mineClassName[9])) {
         for (const direction in offsetDirection) {
             const nearbyTargetRow = row + offsetDirection[direction][0];
