@@ -32,9 +32,7 @@ const offsetDirection = {
 }
 
 const mineStatus = {
-    mine: -3,
-    flaged: -2,
-    unopened: -1,
+    mine: -1,
     zeroMine: 0,
     oneMine: 1,
     twoMine: 2,
@@ -43,8 +41,31 @@ const mineStatus = {
     fiveMine: 5,
     sixMine: 6,
     sevenMine: 7,
-    eightMine: 8
+    eightMine: 8,
 }
+
+const statusName = {
+    unopened: "unopened",
+    opened: "opened",
+    flagged: "flagged",
+    exploded: "exploded",
+    flagMissed: "flagMissed",
+    targetExploded: "targetExploded",
+    pressing: "pressing",
+}
+
+const mineClassName = [
+    "zeroMine",
+    "oneMine",
+    "twoMine",
+    "threeMine",
+    "fourMine",
+    "fiveMine",
+    "sixMine",
+    "sevenMine",
+    "eightMine",
+    "mine"
+]
 
 const mineSize = 13; // change the mineSize must change the size in css as well
 
@@ -53,7 +74,10 @@ const state = {
     size: null,
     level: null,
     mines: [],
-    minesCreated: false
+    status: [],
+    minesCreated: false,
+    statusCreated: false,
+    time: 0,
 };
 
 /*----- cached elements  -----*/
@@ -65,8 +89,9 @@ const init = function() {
     state.level = level.expert;
     setMinesSize();
     createMinesArray(state.size);
-    //allocateMines(5, 5); ////////////////////////////also change here to avoid first step explosion
-    //modifyMinesArray();
+    allocateMines(5, 5);
+    modifyMinesArray();
+    createInitialStatusArray(state.size);
     render();
 }
 
@@ -90,7 +115,6 @@ const createMinesArray = function(size) {
 }
 
 // Randomly allocate the mines into the array
-/////////////////////add argument to avoid first step explosion
 const allocateMines = function(firstRow, firstColumn) { 
     const level = state.level;
     let count = 0;
@@ -144,12 +168,28 @@ const modifyMinesArray = function() {
     }
 }
 
-const rendMinesField = function(row, column) {
+// Create initial unopened status array
+const createInitialStatusArray = function(size) {
+    const row = size.row;
+    const column = size.column;
+    for (let i = 0; i < row; i++) {
+        const emptyRow = [];
+        state.status.push(emptyRow);
+        for (let j = 0; j < column; j++) {
+            state.status[i][j] = statusName.unopened;    // set initial mine
+        }
+    }
+    state.statusCreated = true;
+}
+
+// Rend the mine field
+const rendInitialMinesField = function() {
+    const row = state.size.row;
+    const column = state.size.column;
     for (let i = 0; i < row; i++) {
         const eachRowEl = document.createElement("div");
         eachRowEl.style.display = "flex";
         eachRowEl.classList.add("mine-row");
-        eachRowEl.classList.add(`row-${i}`);
         for (let j = 0; j < column; j++) {
             const mineEl = document.createElement("div");
             mineEl.classList.add("unopened");
@@ -160,57 +200,195 @@ const rendMinesField = function(row, column) {
     }
 }
 
-const changeImageToPress = function(evt) {
-    const target = evt.target;
-    target.classList.remove("unopened");
-    target.classList.add("pressing");
+// Get target mine element with position
+const getTargetElwithPosition = function(row, column) {
+    return minesEl.children[row].children[column];
 }
 
-const changeImageToUnopen = function(evt) {
-    const target = evt.target;
-    if (target.classList.contains("pressing")) {
-        target.classList.remove("pressing");
-        target.classList.add("unopened");
+// Get target el's new status
+const getTargetElNewStatus = function(row, column) {
+    const index = state.mines[row][column];
+    if (index !== -1) {
+        return mineClassName[index];
+    } else {
+        return mineClassName[9];
     }
+    
 }
 
-const changeImageToOne = function(evt) {
+// Update the new status to the status array
+const updateTargetElStatus = function(row, column, newStatus) {
+    const status = state.status;
+    status[row][column] = newStatus;
+}
+
+// update the target el's class
+const updateTargetElClassList = function(row, column) {
+    const targetEl = getTargetElwithPosition(row, column);
+    const newStatus = state.status[row][column];
+    targetEl.className = "";
+    targetEl.classList.add(newStatus);
+}
+
+// Open an cell
+const openTargetCell = function(row, column) {
+    const newStatus = getTargetElNewStatus(row, column);
+    updateTargetElStatus(row, column, newStatus);
+    updateTargetElClassList(row, column);
+}
+
+// Convert the target id to int array
+const convertTargetIDtoPosition = function(target) {
+    const id = target.id;
+    const position = id.split("-");
+    return [parseInt(position[0]), parseInt(position[1])]
+}
+
+const leftClickHandler = function(evt) {
     const target = evt.target;
-    target.classList.remove("unopened");
-    target.classList.add("one");
+    const position = convertTargetIDtoPosition(target);
+    const row = position[0];
+    const column = position[1];
+    openTargetCell(row, column)
 }
 
 // Render all the content
 const render = function() {
-    const row = state.size.row;
-    const column = state.size.column;
-    rendMinesField(row, column);
+    rendInitialMinesField();
 }
 
-const allocateMinesWithTarget = function(evt) {
-    if (!state.minesCreated) {
-        const target = evt.target;
-        const id = target.id;
-        const position = id.split("-");
-        console.log(position[0], position[1])
-        allocateMines(position[0], position[1]);
-        modifyMinesArray();
-    }
-}
+init();
 
+
+/*----- event listeners -----*/
 const bindEventListener = function() {
     for (let i = 0; i < state.size.row; i++) {
         for (let j = 0; j < state.size.column; j++) {
-            const target = minesEl.children[i].children[j];
-            target.addEventListener("mousedown", changeImageToPress)
-            target.addEventListener("mouseup", changeImageToUnopen)
-            target.addEventListener("mouseout", changeImageToUnopen)
-            target.addEventListener("click", changeImageToOne)
-            target.addEventListener("click", allocateMinesWithTarget)
+            const target = getTargetElwithPosition(i, j);
+            // target.addEventListener("mousedown", changeImageToPress)
+            // target.addEventListener("mouseup", changeImageToUnopen)
+            // target.addEventListener("mouseout", changeImageToUnopen)
+            target.addEventListener("click", leftClickHandler)
+            
         }
     }
 }
 
-init();
-/*----- event listeners -----*/
 bindEventListener();
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const changeImageToPress = function(evt) {
+//     const target = evt.target;
+//     target.classList.remove(statusName.unopened);
+//     target.classList.add(statusName.pressing);
+// }
+
+// const changeImageToUnopen = function(evt) {
+//     const target = evt.target;
+//     if (target.classList.contains(statusName.pressing)) {
+//         target.classList.remove(statusName.pressing);
+//         target.classList.add(statusName.unopened);
+//     }
+// }
+
+
+// // Create mine field except the first clicked target's index
+// const allocateMinesWithTarget = function(evt) {
+//     if (!state.minesCreated) {
+//         const target = evt.target;
+//         const position = convertTargetIDtoPosition(target);
+//         allocateMines(position[0], position[1]);
+//         modifyMinesArray();
+//     }
+// }
+
+// // 
+// const addClassNameToCell = function(evt) {
+//     const target = evt.target;
+//     const position = convertTargetIDtoPosition(target); 
+//     const classIndex = state.mines[position[0]][position[1]];
+//     target.classList.add(statusName.opened)
+//     if (classIndex !== mineStatus.mine) {
+//         target.classList.add(mineClassName[classIndex]);
+//     } else {
+//         target.classList.add(mineClassName[9]);
+//     }
+// }
+
+
+
+// const leftClickHandler = function(evt) {
+//     if (evt.button === 0) {
+//         //removeUnopenedClass(evt);
+//         allocateMinesWithTarget(evt);
+//         addClassNameToCell(evt);
+//     }
+// }
+
+// const rightClickHandler = function(evt) {
+
+// }
+
+// const getMineElwithPosition = function(row, column) {
+//     return minesEl.children[row].children[column];
+// }
+
+
+
+// const floodFeature = function(row, column) {
+//     const mines = state.mines;
+//     const clickedTargetEl = getMineElwithPosition(row, column);
+//     const clickedTarget = mines[row][column];
+//     if (clickedTarget === mineStatus.zeroMine &&
+//         !clickedTargetEl.classList.contains(mineClassName[0])) {
+//         clickedTargetEl.className = "";
+
+//     }
+
+//     for (const direction in offsetDirection) {
+//         const targetRow = row + offsetDirection[direction][0];
+//         const targetColumn = column + offsetDirection[direction][1];
+//         // If the target location is not out of the index boundary
+//         if (mines[targetRow] !== undefined &&
+//             mines[targetRow][targetColumn] !== undefined &&
+//             mines[targetRow][targetColumn] === mineStatus.zeroMine) {
+//                 const target = getMineElwithPosition
+//         }
+//     }
+// }
+
+// const convertTargetIDtoPosition = function(target) {
+//     const id = target.id;
+//     const position = id.split("-");
+//     return [parseInt(position[0]), parseInt(position[1])]
+// }
+
+// init();
+// /*----- event listeners -----*/
+// const bindEventListener = function() {
+//     for (let i = 0; i < state.size.row; i++) {
+//         for (let j = 0; j < state.size.column; j++) {
+//             const target = minesEl.children[i].children[j];
+//             target.addEventListener("mousedown", changeImageToPress)
+//             target.addEventListener("mouseup", changeImageToUnopen)
+//             target.addEventListener("mouseout", changeImageToUnopen)
+//             target.addEventListener("click", leftClickHandler)
+            
+//         }
+//     }
+// }
+
+
+// bindEventListener();
+

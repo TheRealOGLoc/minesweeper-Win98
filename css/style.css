@@ -6,6 +6,7 @@
     --expert-width: 30;
     --expert-height: 16;
     --mine-size: 13px;
+    --border-width: 2.5px;
 }
 
 body {
@@ -19,16 +20,10 @@ body {
 .mines {
     display: flex;
     flex-direction: column;
-    border-top: 3px solid grey;
-    border-left: 3px solid grey;
-    border-right: 3px solid white;
-    border-bottom: 3px solid white;
-}
-
-.mine {
-    height: var(--mine-size);
-    width: var(--mine-size);
-    background-image: url("/assets/icons/unopened-square.svg");
+    border-top: var(--border-width) solid grey;
+    border-left: var(--border-width) solid grey;
+    border-right: var(--border-width) solid white;
+    border-bottom: var(--border-width) solid white;
 }
 
 .mine-row {
@@ -36,28 +31,61 @@ body {
     width:auto;
 }
 
-.unopened {
+.mine-row div {
     height: var(--mine-size);
     width: var(--mine-size);
+}
+
+.zeroMine {
+    background-image: url("/assets/icons/zero.svg");
+}
+
+.oneMine {
+    background-image: url("/assets/icons/one.svg");
+}
+
+.twoMine {
+    background-image: url("/assets/icons/two.svg");
+}
+
+.threeMine {
+    background-image: url("/assets/icons/three.svg");
+}
+
+.fourMine {
+    background-image: url("/assets/icons/four.svg");
+}
+
+.fiveMine {
+    background-image: url("/assets/icons/five.svg");
+}
+
+.sixMine {
+    background-image: url("/assets/icons/six.svg");
+}
+
+.sevenMine {
+    background-image: url("/assets/icons/seven.svg");
+}
+
+.eightMine {
+    background-image: url("/assets/icons/eight.svg");
+}
+
+.mine {
+    background-image: url("/assets/icons/mine.svg");
+}
+
+.unopened {
     background-image: url("/assets/icons/unopened-square.svg");
 }
 
 .pressing {
-    height: var(--mine-size);
-    width: var(--mine-size);
     background-image: url("/assets/icons/pressed.svg");
 }
 
 .flag {
-    height: var(--mine-size);
-    width: var(--mine-size);
     background-image: url("/assets/icons/flag.svg");
-}
-
-.one {
-    height: var(--mine-size);
-    width: var(--mine-size);
-    background-image: url("/assets/icons/one.svg");
 }
 
 
@@ -65,9 +93,3 @@ body {
     cursor: pointer;
 }
 
-.zero {
-    height: var(--mine-size);
-    width: var(--mine-size);
-    background-image: url("/assets/icons/one.svg");
-
-}
