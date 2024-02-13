@@ -17,7 +17,7 @@ const expertSize = {
 const level = {
     beginner: 10,
     intermediate: 40,
-    expert: 99,
+    expert: 60,
 }
 
 const offsetDirection = {
@@ -109,7 +109,7 @@ const createMinesArray = function(size) {
         const emptyRow = [];
         state.mines.push(emptyRow);
         for (let j = 0; j < column; j++) {
-            state.mines[i][j] = mineStatus.zeroMine;    // set initial mine
+            state.mines[i][j] = mineStatus.zeroMine;    // set initial mine to zero mine
         }
     }
 }
@@ -242,36 +242,68 @@ const openTargetCell = function(row, column) {
     }
 }
 
+// const attemptToOpenNearbyCell = function(row, column) {
+//     const status = state.status[row][column];
+//     if (mineClassName.some((name) => name === status)) {
 
+//     }
+// }
 
-// Open nearby zero mine cells
+// // Open nearby zero mine cells, recursive function
+// const openNearbyZeroMineCell = function(row, column, scannedCell) {
+//     const mines = state.mines;
+//     const targetMine = mines[row][column]
+//     // If the target cell is zero mine and it is not in the scannedCell
+//     if (targetMine === mineStatus.zeroMine && !scannedCell.some(cell => cell[0] === row && cell[1] === column)) {
+//         // Push it into the scannedCell to prevent 
+//         scannedCell.push([row, column]);
+//         for (const direction in offsetDirection) {
+//             const nearbyTargetRow = row + offsetDirection[direction][0];
+//             const nearbyTargetColumn = column + offsetDirection[direction][1];
+//             // If the target location is not out of the index boundary
+//             if (mines[nearbyTargetRow] !== undefined &&
+//                 mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
+//                     openTargetCell(nearbyTargetRow, nearbyTargetColumn);
+//                     openNearbyZeroMineCell(nearbyTargetRow, nearbyTargetColumn, scannedCell);
+//             }
+//         }
+//     } else {
+//         return;
+//     }
+// }
+
+// Open nearby zero mine cells, recursive function
 const openNearbyZeroMineCell = function(row, column, scannedCell) {
-    console.log(row, "-", column);
     const mines = state.mines;
-    const targetMine = state.mines[row][column]
-    console.log(scannedCell);
-    if (targetMine === mineStatus.zeroMine && !([row, column] in scannedCell)) {
-        scannedCell.push([row, column]);
-        for (const direction in offsetDirection) {
-            const nearbyTargetRow = row + offsetDirection[direction][0];
-            const nearbyTargetColumn = column + offsetDirection[direction][1];
-            // If the target location is not out of the index boundary
-            if (mines[nearbyTargetRow] !== undefined &&
-                mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
-                    openTargetCell(nearbyTargetRow, nearbyTargetColumn);
-                    openNearbyZeroMineCell(nearbyTargetRow, nearbyTargetColumn, scannedCell);
-            }
-        }
-    } else {
+    const targetMine = mines[row][column];
+    // If the target cell is zero mine and it is not in the scannedCell
+    if (targetMine !== mineStatus.zeroMine || scannedCell.some(cell => cell[0] === row && cell[1] === column)) {
+        // Push it into the scannedCell to prevent 
         return;
+    } 
+    scannedCell.push([row, column]);
+    for (const direction in offsetDirection) {
+        const nearbyTargetRow = row + offsetDirection[direction][0];
+        const nearbyTargetColumn = column + offsetDirection[direction][1];
+        // If the target location is not out of the index boundary
+        if (mines[nearbyTargetRow] !== undefined &&
+            mines[nearbyTargetRow][nearbyTargetColumn] !== undefined &&
+            !scannedCell.some(cell => cell[0] === nearbyTargetRow && cell[1] === nearbyTargetColumn)) {
+                openTargetCell(nearbyTargetRow, nearbyTargetColumn);
+                openNearbyZeroMineCell(nearbyTargetRow, nearbyTargetColumn, scannedCell);
+        }
     }
 }
 
+
+// Right click to put a flag on a cell 
 const flagTargetCell = function(row, column) {
     const status = state.status[row][column];
+    // If the cell is unopened, put flag on it
     if (status === statusName.unopened) {
         updateTargetElStatus(row, column, statusName.flagged);
         updateTargetElClassList(row, column);
+      //if already has a flag, remove flag
     } else if (status === statusName.flagged) {
         updateTargetElStatus(row, column, statusName.unopened);
         updateTargetElClassList(row, column);
@@ -295,6 +327,8 @@ const changeImageToPress = function(evt) {
         target.classList.add(statusName.pressing);
     }
 }
+
+
 
 const changeImageToUnopen = function(evt) {
     const target = evt.target;
