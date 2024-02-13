@@ -222,7 +222,7 @@ const updateTargetElStatus = function(row, column, newStatus) {
     status[row][column] = newStatus;
 }
 
-// update the target el's class
+// Update the target el's class
 const updateTargetElClassList = function(row, column) {
     const targetEl = getTargetElwithPosition(row, column);
     const newStatus = state.status[row][column];
@@ -232,9 +232,50 @@ const updateTargetElClassList = function(row, column) {
 
 // Open an cell
 const openTargetCell = function(row, column) {
-    const newStatus = getTargetElNewStatus(row, column);
-    updateTargetElStatus(row, column, newStatus);
-    updateTargetElClassList(row, column);
+    const status = state.status[row][column];
+    if (status === statusName.unopened) {
+        const newStatus = getTargetElNewStatus(row, column);
+        updateTargetElStatus(row, column, newStatus);
+        updateTargetElClassList(row, column);
+        let scannedCell = [];
+        openNearbyZeroMineCell(row, column, scannedCell);
+    }
+}
+
+
+
+// Open nearby zero mine cells
+const openNearbyZeroMineCell = function(row, column, scannedCell) {
+    console.log(row, "-", column);
+    const mines = state.mines;
+    const targetMine = state.mines[row][column]
+    console.log(scannedCell);
+    if (targetMine === mineStatus.zeroMine && !([row, column] in scannedCell)) {
+        scannedCell.push([row, column]);
+        for (const direction in offsetDirection) {
+            const nearbyTargetRow = row + offsetDirection[direction][0];
+            const nearbyTargetColumn = column + offsetDirection[direction][1];
+            // If the target location is not out of the index boundary
+            if (mines[nearbyTargetRow] !== undefined &&
+                mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
+                    openTargetCell(nearbyTargetRow, nearbyTargetColumn);
+                    openNearbyZeroMineCell(nearbyTargetRow, nearbyTargetColumn, scannedCell);
+            }
+        }
+    } else {
+        return;
+    }
+}
+
+const flagTargetCell = function(row, column) {
+    const status = state.status[row][column];
+    if (status === statusName.unopened) {
+        updateTargetElStatus(row, column, statusName.flagged);
+        updateTargetElClassList(row, column);
+    } else if (status === statusName.flagged) {
+        updateTargetElStatus(row, column, statusName.unopened);
+        updateTargetElClassList(row, column);
+    }
 }
 
 // Convert the target id to int array
@@ -244,12 +285,53 @@ const convertTargetIDtoPosition = function(target) {
     return [parseInt(position[0]), parseInt(position[1])]
 }
 
-const leftClickHandler = function(evt) {
+const changeImageToPress = function(evt) {
     const target = evt.target;
-    const position = convertTargetIDtoPosition(target);
-    const row = position[0];
-    const column = position[1];
-    openTargetCell(row, column)
+    const button = evt.button;
+    const id = convertTargetIDtoPosition(target);
+    const status = state.status[id[0]][id[1]];
+    if (status === statusName.unopened && button === 0) {
+        target.classList.remove(statusName.unopened);
+        target.classList.add(statusName.pressing);
+    }
+}
+
+const changeImageToUnopen = function(evt) {
+    const target = evt.target;
+    const button = evt.button;
+    if (button === 0 && target.classList.contains(statusName.pressing)) {
+        target.classList.remove(statusName.pressing);
+        target.classList.add(statusName.unopened);
+    }
+}
+
+// When pressing cell instead of clicking it.
+const pressingCellEventListener = function(target) {
+    target.addEventListener("mousedown", changeImageToPress)
+    target.addEventListener("mouseup", changeImageToUnopen)
+    target.addEventListener("mouseout", changeImageToUnopen)
+}
+
+// All left click function wrapper
+const leftClickHandler = function(evt) {
+    if (evt.button === 0) {
+        const target = evt.target;
+        const position = convertTargetIDtoPosition(target);
+        const row = position[0];
+        const column = position[1];
+        openTargetCell(row, column);
+    }
+}
+
+// All right click function wrapper
+const rightClickHandler = function(evt) {
+    if (evt.button === 2) {
+        const target = evt.target;
+        const position = convertTargetIDtoPosition(target);
+        const row = position[0];
+        const column = position[1];
+        flagTargetCell(row, column);
+    }
 }
 
 // Render all the content
@@ -265,15 +347,13 @@ const bindEventListener = function() {
     for (let i = 0; i < state.size.row; i++) {
         for (let j = 0; j < state.size.column; j++) {
             const target = getTargetElwithPosition(i, j);
-            // target.addEventListener("mousedown", changeImageToPress)
-            // target.addEventListener("mouseup", changeImageToUnopen)
-            // target.addEventListener("mouseout", changeImageToUnopen)
+            pressingCellEventListener(target);
             target.addEventListener("click", leftClickHandler)
-            
+            target.addEventListener("contextmenu", rightClickHandler);
         }
     }
 }
-
+document.addEventListener('contextmenu', event => event.preventDefault());
 bindEventListener();
 
 
