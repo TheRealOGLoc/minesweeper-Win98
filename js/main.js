@@ -241,14 +241,73 @@ const updateTargetElClassList = function(row, column) {
 // Open an cell
 const openTargetCell = function(row, column) {
     const status = state.status[row][column];
-    if (status === statusName.unopened) {
+    const cell = state.mines[row][column];
+    // If the target cell is not a mine
+    if (status === statusName.unopened && cell !== mineStatus.mine) {
         const newStatus = getTargetElNewStatus(row, column);
         updateTargetElStatus(row, column, newStatus);
         updateTargetElClassList(row, column);
         let scannedCell = [];
         openNearbyZeroMineCell(row, column, scannedCell);
+        // if the target cell is a mine
+    } else if (status === statusName.unopened && cell === mineStatus.mine) {
+        const newStatus = statusName.targetExploded;
+        updateTargetElStatus(row, column, newStatus);
+        updateTargetElClassList(row, column);
+        showAllMinesAndCheckFlag();
+        changeWinningCondition(winStatus.lose);
+    } 
+}
+
+const changeWinningCondition = function(condition) {
+    state.win = condition;
+}
+
+// Count nearby flag number
+const countNearbyFlagNum = function(row, column, mines) {
+    let flagsNearbyNum = 0;
+    for (const direction in offsetDirection) {
+        const nearbyTargetRow = row + offsetDirection[direction][0];
+        const nearbyTargetColumn = column + offsetDirection[direction][1];
+        // If the target location is not out of the index boundary
+        if (mines[nearbyTargetRow] !== undefined &&
+            mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
+                const nearbyStatus = state.status[nearbyTargetRow][nearbyTargetColumn];
+                if (nearbyStatus === statusName.flagged) {
+                    flagsNearbyNum++;
+            }
+        }
+    }
+    return flagsNearbyNum;
+}
+
+// Open nearby none zero cell
+const openNearbyNoneZeroCell = function(row, column, mines) {
+    for (const direction in offsetDirection) {
+        const nearbyTargetRow = row + offsetDirection[direction][0];
+        const nearbyTargetColumn = column + offsetDirection[direction][1];
+        // If the target location is not out of the index boundary
+        if (mines[nearbyTargetRow] !== undefined &&
+            mines[nearbyTargetRow][nearbyTargetColumn] !== undefined) {
+                openTargetCell(nearbyTargetRow, nearbyTargetColumn);
+        }
     }
 }
+
+// If the target cell is already opened and is not a zero mine
+const openNearbyCell = function(row, column) {
+    const mines = state.mines;
+    const status = state.status[row][column];
+    const minesNearbyNum = state.mines[row][column];
+    // If the target cell is not a zero mine
+    if (mineClassName.some(name => status !== mineClassName[0] && status !== mineClassName[9] && name === status)) {
+        const flagsNearbyNum = countNearbyFlagNum(row, column, mines);
+        if (flagsNearbyNum === minesNearbyNum) {
+            openNearbyNoneZeroCell(row, column, mines);
+        }
+    }
+}
+
 
 
 // Open nearby zero mine cells, recursive function
@@ -274,8 +333,24 @@ const openNearbyZeroMineCell = function(row, column, scannedCell) {
     }
 }
 
-const showAllMines = function() {
-
+//
+const showAllMinesAndCheckFlag = function() {
+    const mines = state.mines;
+    const status = state.status;
+    const size = state.size;
+    for (let i = 0; i < size.row; i++) {
+        for (let j = 0; j < size.column; j++) {
+            const targetStatus = status[i][j];
+            const targetMine = mines[i][j];
+            if (targetMine === mineStatus.mine && targetStatus === statusName.unopened) {
+                updateTargetElStatus(i, j, statusName.exploded);
+                updateTargetElClassList(i, j);
+            } else if (targetMine !== mineStatus.mine && targetStatus === statusName.flagged) {
+                updateTargetElStatus(i, j, statusName.flagMissed);
+                updateTargetElClassList(i, j);
+            }
+        }
+    }
 }
 
 // Right click to put a flag on a cell 
@@ -332,6 +407,7 @@ const changeImageToUnopen = function(evt) {
     changeNearbyImage(id[0], id[1], status, mines, true);
 }
 
+// Change the view of nearby cell when clicking an opened none zero cell
 const changeNearbyImage = function(row, column, status, mines, releaseMouse) {
     let removeStatus = statusName.unopened;
     let addStatus = statusName.pressing;
@@ -368,18 +444,19 @@ const pressingCellEventListener = function(target) {
 
 // All left click function wrapper
 const leftClickHandler = function(evt) {
-    if (evt.button === 0) {
+    if (evt.button === 0 && state.win === winStatus.playing) {
         const target = evt.target;
         const position = convertTargetIDtoPosition(target);
         const row = position[0];
         const column = position[1];
         openTargetCell(row, column);
+        openNearbyCell(row, column);
     }
 }
 
 // All right click function wrapper
 const rightClickHandler = function(evt) {
-    if (evt.button === 2) {
+    if (evt.button === 2 && state.win === winStatus.playing) {
         const target = evt.target;
         const position = convertTargetIDtoPosition(target);
         const row = position[0];
@@ -407,122 +484,6 @@ const bindEventListener = function() {
         }
     }
 }
+// Disable the right click menu
 document.addEventListener('contextmenu', event => event.preventDefault());
 bindEventListener();
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const changeImageToPress = function(evt) {
-//     const target = evt.target;
-//     target.classList.remove(statusName.unopened);
-//     target.classList.add(statusName.pressing);
-// }
-
-// const changeImageToUnopen = function(evt) {
-//     const target = evt.target;
-//     if (target.classList.contains(statusName.pressing)) {
-//         target.classList.remove(statusName.pressing);
-//         target.classList.add(statusName.unopened);
-//     }
-// }
-
-
-// // Create mine field except the first clicked target's index
-// const allocateMinesWithTarget = function(evt) {
-//     if (!state.minesCreated) {
-//         const target = evt.target;
-//         const position = convertTargetIDtoPosition(target);
-//         allocateMines(position[0], position[1]);
-//         modifyMinesArray();
-//     }
-// }
-
-// // 
-// const addClassNameToCell = function(evt) {
-//     const target = evt.target;
-//     const position = convertTargetIDtoPosition(target); 
-//     const classIndex = state.mines[position[0]][position[1]];
-//     target.classList.add(statusName.opened)
-//     if (classIndex !== mineStatus.mine) {
-//         target.classList.add(mineClassName[classIndex]);
-//     } else {
-//         target.classList.add(mineClassName[9]);
-//     }
-// }
-
-
-
-// const leftClickHandler = function(evt) {
-//     if (evt.button === 0) {
-//         //removeUnopenedClass(evt);
-//         allocateMinesWithTarget(evt);
-//         addClassNameToCell(evt);
-//     }
-// }
-
-// const rightClickHandler = function(evt) {
-
-// }
-
-// const getMineElwithPosition = function(row, column) {
-//     return minesEl.children[row].children[column];
-// }
-
-
-
-// const floodFeature = function(row, column) {
-//     const mines = state.mines;
-//     const clickedTargetEl = getMineElwithPosition(row, column);
-//     const clickedTarget = mines[row][column];
-//     if (clickedTarget === mineStatus.zeroMine &&
-//         !clickedTargetEl.classList.contains(mineClassName[0])) {
-//         clickedTargetEl.className = "";
-
-//     }
-
-//     for (const direction in offsetDirection) {
-//         const targetRow = row + offsetDirection[direction][0];
-//         const targetColumn = column + offsetDirection[direction][1];
-//         // If the target location is not out of the index boundary
-//         if (mines[targetRow] !== undefined &&
-//             mines[targetRow][targetColumn] !== undefined &&
-//             mines[targetRow][targetColumn] === mineStatus.zeroMine) {
-//                 const target = getMineElwithPosition
-//         }
-//     }
-// }
-
-// const convertTargetIDtoPosition = function(target) {
-//     const id = target.id;
-//     const position = id.split("-");
-//     return [parseInt(position[0]), parseInt(position[1])]
-// }
-
-// init();
-// /*----- event listeners -----*/
-// const bindEventListener = function() {
-//     for (let i = 0; i < state.size.row; i++) {
-//         for (let j = 0; j < state.size.column; j++) {
-//             const target = minesEl.children[i].children[j];
-//             target.addEventListener("mousedown", changeImageToPress)
-//             target.addEventListener("mouseup", changeImageToUnopen)
-//             target.addEventListener("mouseout", changeImageToUnopen)
-//             target.addEventListener("click", leftClickHandler)
-            
-//         }
-//     }
-// }
-
-
-// bindEventListener();
-

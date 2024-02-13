@@ -88,6 +88,17 @@ body {
     background-image: url("/assets/icons/flag.svg");
 }
 
+.targetExploded {
+    background-image: url("/assets/icons/mine-explode.svg");
+}
+
+.exploded {
+    background-image: url("/assets/icons/mine.svg");
+}
+
+.flagMissed {
+    background-image: url("/assets/icons/flag-missed.svg");
+}
 
 .unopened:hover {
     cursor: pointer;
