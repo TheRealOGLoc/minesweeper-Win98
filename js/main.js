@@ -101,7 +101,7 @@ const init = function() {
     state.mineLeft = level.beginner;
     setElementsSize();
     createMinesArray(state.size);
-    allocateMines(5, 5);
+    allocateMines();
     modifyMinesArray();
     createInitialStatusArray(state.size);
     render();
@@ -128,16 +128,13 @@ const createMinesArray = function(size) {
 }
 
 // Randomly allocate the mines into the array
-const allocateMines = function(firstRow, firstColumn) { 
+const allocateMines = function() { 
     const level = state.level;
     let count = 0;
     while (count != level) {
         const row = Math.floor(Math.random() * state.size.row);
         const column = Math.floor(Math.random() * state.size.column);
-        // if the target is not mine, set it to mine
-        if (row === firstRow && column === firstColumn) {
-            continue;
-        } else if (state.mines[row][column] !== mineStatus.mine) {
+        if (state.mines[row][column] !== mineStatus.mine) {
             state.mines[row][column] = mineStatus.mine;
             count++;
         } 
@@ -337,7 +334,27 @@ const openNearbyCell = function(row, column) {
     }
 }
 
-
+// 
+const preventFirstClickMine = function(row, column) {
+    if (!state.firstClick) {
+        const mines = state.mines;
+        const size = state.size;
+        if (mines[row][column] === mineStatus.mine) {
+            mines[row][column] = mineStatus.zeroMine;
+            let hasMovedMine = false;
+            while (!hasMovedMine) {
+                const newMineRow = Math.floor(Math.random() * size.row);
+                const newMineColumn = Math.floor(Math.random() * size.column);
+                if (mines[newMineRow][newMineColumn] !== mineStatus.mine) {
+                    mines[newMineRow][newMineColumn] = mineStatus.mine;
+                    hasMovedMine = true;
+                }
+            }
+            modifyMinesArray();
+        }
+        state.firstClick = true;
+    }
+}
 
 // Open nearby zero mine cells, recursive function
 const openNearbyZeroMineCell = function(row, column, scannedCell) {
@@ -494,6 +511,7 @@ const leftClickHandler = function(evt) {
         const position = convertTargetIDtoPosition(target);
         const row = position[0];
         const column = position[1];
+        preventFirstClickMine(row, column);
         openTargetCell(row, column);
         openNearbyCell(row, column);
         checkIfHasWon();
