@@ -44,6 +44,19 @@ const mineStatus = {
     eightMine: 8,
 }
 
+const numImageClassName = [
+    "num-zero",
+    "num-one",
+    "num-two",
+    "num-three",
+    "num-four",
+    "num-five",
+    "num-six",
+    "num-seven",
+    "num-eight",
+    "num-nine"
+]
+
 const statusName = {
     unopened: "unopened",
     opened: "opened",
@@ -92,15 +105,25 @@ const state = {
 /*----- cached elements  -----*/
 const minesEl = document.querySelector(".mines");
 const containerEl = document.querySelector(".container");
+const mineLeftHundredsEl = document.querySelector(".mine-left-hundreds");
+const mineLeftTensEl = document.querySelector(".mine-left-tens");
+const mineLeftUnitsEl = document.querySelector(".mine-left-units");
+const timerHundredsEl = document.querySelector(".timer-hundreds");
+const timerTensEl = document.querySelector(".timer-tens");
+const timerUnitsEl = document.querySelector(".timer-units");
+
 
 /*----- classes -----*/
+
+// Time class to show the time has played
 class Timer {
     static hundreds = 0;
     static tens = 0;
     static units = 0;
+    static timer;
     static timeIncrement = () => {
         if (this.hundreds === 9 && this.tens === 9 && this.units === 9) {
-            return [9, 9, 9];
+            return [9, 9, 9]
         }
         this.units++;
         if (this.units === 10) {
@@ -111,7 +134,7 @@ class Timer {
             this.hundreds++;
             this.tens = 0;
         }
-        console.log(this.hundreds, this.tens, this.units);
+        return [this.hundreds, this.tens, this.units];
     }
 }
 
@@ -119,8 +142,8 @@ class Timer {
 const init = function() {
     state.size = beginnerSize;
     state.level = level.beginner;
-    state.win = winStatus.playing;
     state.mineLeft = level.beginner;
+    state.win = winStatus.playing;
     resetTimer();
     setElementsSize();
     createMinesArray(state.size);
@@ -163,7 +186,6 @@ const allocateMines = function() {
         } 
     }
     state.minesCreated = true;
-    console.log(state.mines);
 }
 
 // Calculate nearby mines based on the given location
@@ -215,6 +237,35 @@ const createInitialStatusArray = function(size) {
     state.statusCreated = true;
 }
 
+// Update single number in the indicator
+const updateNumberClass = function(element, newNumberIndex) {
+    for (let i = 0; i < numImageClassName.length; i++) {
+        element.classList.remove(numImageClassName[i]);
+    }
+    element.classList.add(numImageClassName[newNumberIndex]);
+}
+
+// Rend all the mine left number
+const rendMineLeftCount = function() {
+    const mineLeft = state.mineLeft;
+    const mineLeftUnitNum = parseInt(mineLeft % 10);
+    const mineLeftTenNum = parseInt((mineLeft % 100) / 10);
+    const mineLeftHundredNum = parseInt((mineLeft % 1000) / 100);
+    updateNumberClass(mineLeftUnitsEl, mineLeftUnitNum);
+    updateNumberClass(mineLeftTensEl, mineLeftTenNum);
+    updateNumberClass(mineLeftHundredsEl, mineLeftHundredNum);
+}
+
+const rendTimer = function() {
+    const timer = state.timer;
+    const timerUnitNum = timer[2];
+    const timerTenNum = timer[1];
+    const timerHundredNum = timer[0];
+    updateNumberClass(timerUnitsEl, timerUnitNum);
+    updateNumberClass(timerTensEl, timerTenNum);
+    updateNumberClass(timerHundredsEl, timerHundredNum);
+}
+
 // Rend the mine field
 const rendInitialMinesField = function() {
     const row = state.size.row;
@@ -231,6 +282,10 @@ const rendInitialMinesField = function() {
         }
         minesEl.appendChild(eachRowEl);     // append to the mines element
     }
+}
+
+const rendNumberOfMineLeft = function() {
+
 }
 
 // Get target mine element with position
@@ -267,7 +322,7 @@ const checkIfHasWon = function() {
         }
         if (correctFlagsCount === level) {
             changeWinningCondition(winStatus.win);
-            clearInterval(state.timer);
+            clearInterval(Timer.timer);
         }
     }
 }
@@ -285,6 +340,8 @@ const updateTargetElClassList = function(row, column) {
     targetEl.className = "";
     targetEl.classList.add(newStatus);
 }
+
+
 
 // Open an cell
 const openTargetCell = function(row, column) {
@@ -304,7 +361,7 @@ const openTargetCell = function(row, column) {
         updateTargetElClassList(row, column);
         showAllMinesAndCheckFlag();
         changeWinningCondition(winStatus.lose);
-        clearInterval(state.timer)
+        clearInterval(Timer.timer);
     } 
 }
 
@@ -367,6 +424,12 @@ const resetTimer = function() {
     state.timer = [0, 0, 0];
 }
 
+// The time function to be set as the interval
+const updateTimer = function() {
+    state.timer = Timer.timeIncrement();
+    rendTimer();
+}
+
 // Prevent the first click is mine
 const preventFirstClickMine = function(row, column) {
     if (!state.firstClick) {
@@ -387,7 +450,7 @@ const preventFirstClickMine = function(row, column) {
         }
         state.firstClick = true;
         // Start timer
-        state.timer = setInterval(Timer.timeIncrement, 1000);
+        Timer.timer = setInterval(updateTimer, 1000);
     }
 }
 
@@ -561,6 +624,7 @@ const rightClickHandler = function(evt) {
         const row = position[0];
         const column = position[1];
         flagTargetCell(row, column);
+        rendMineLeftCount();
         checkIfHasWon();
     }
 }
@@ -568,6 +632,8 @@ const rightClickHandler = function(evt) {
 // Render all the content
 const render = function() {
     rendInitialMinesField();
+    rendMineLeftCount();
+    rendTimer();
 }
 
 init();

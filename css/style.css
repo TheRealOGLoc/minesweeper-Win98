@@ -122,6 +122,10 @@ body {
     font-size: 10px;
 }
 
+#maximum {
+    color: rgb(131, 125, 125);
+}
+
 #exit {
     margin-right: 2px;
 }
@@ -165,6 +169,56 @@ body {
     width: 24px;
     background-size: contain;
     background-repeat: no-repeat;
+    display: flex;
+    justify-content: space-between;
+}
+
+.num {
+    height: 14px;
+    width: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 1.4px 0.8px;
+}
+
+.num-zero {
+    background-image: url(../assets/images/num-zero.svg);
+}
+
+.num-one {
+    background-image: url(../assets/images/num-one.svg);
+}
+
+.num-two {
+    background-image: url(../assets/images/num-two.svg);
+}
+
+.num-three {
+    background-image: url(../assets/images/num-three.svg);
+}
+
+.num-four {
+    background-image: url(../assets/images/num-four.svg);
+}
+
+.num-five {
+    background-image: url(../assets/images/num-five.svg);
+}
+
+.num-six {
+    background-image: url(../assets/images/num-six.svg);
+}
+
+.num-seven {
+    background-image: url(../assets/images/num-seven.svg);
+}
+
+.num-eight {
+    background-image: url(../assets/images/num-eight.svg);
+}
+
+.num-nine {
+    background-image: url(../assets/images/num-nine.svg);
 }
 
 #restart {
@@ -189,6 +243,7 @@ body {
     width: 24px;
     background-size: contain;
     background-repeat: no-repeat;
+    display: flex;
 }
 
 
