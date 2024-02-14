@@ -17,7 +17,7 @@ const expertSize = {
 const level = {
     beginner: 10,
     intermediate: 30,
-    expert: 100,
+    expert: 80,
 }
 
 const offsetDirection = {
@@ -84,19 +84,22 @@ const state = {
     minesCreated: false,
     statusCreated: false,
     time: 0,
+    mineLeft: 0,
     win: null,
     firstClick: false,
 };
 
 /*----- cached elements  -----*/
 const minesEl = document.querySelector(".mines");
+const containerEl = document.querySelector(".container");
 
 /*----- functions -----*/
 const init = function() {
-    state.size = expertSize;
-    state.level = level.expert;
+    state.size = beginnerSize;
+    state.level = level.beginner;
     state.win = winStatus.playing;
-    setMinesSize();
+    state.mineLeft = level.beginner;
+    setElementsSize();
     createMinesArray(state.size);
     allocateMines(5, 5);
     modifyMinesArray();
@@ -105,7 +108,8 @@ const init = function() {
 }
 
 // Set the minesEl's width and height
-const setMinesSize = function() {
+const setElementsSize = function() {
+    containerEl.style.width = `${mineSize * state.size.column + 15}px`
     minesEl.style.width = `${mineSize * state.size.column}px`
     minesEl.style.height = `${mineSize * state.size.row}px`
 }
@@ -225,6 +229,28 @@ const getTargetElNewStatus = function(row, column) {
     
 }
 
+// Check if has won
+const checkIfHasWon = function() {
+    if (state.mineLeft === 0) {
+        const size = state.size;
+        const mines = state.mines;
+        const status = state.status;
+        const level = state.level;
+        let correctFlagsCount = 0
+        // Count if all mine has been flagged
+        for (let i = 0; i < size.row; i++) {
+            for (let j = 0; j < size.column; j++) {
+                if (mines[i][j] === mineStatus.mine && status[i][j] === statusName.flagged) {
+                    correctFlagsCount++;
+                }
+            }
+        }
+        if (correctFlagsCount === level) {
+            changeWinningCondition(winStatus.win);
+        }
+    }
+}
+
 // Update the new status to the status array
 const updateTargetElStatus = function(row, column, newStatus) {
     const status = state.status;
@@ -260,6 +286,8 @@ const openTargetCell = function(row, column) {
     } 
 }
 
+
+// Change the current game condition
 const changeWinningCondition = function(condition) {
     state.win = condition;
 }
@@ -354,6 +382,15 @@ const showAllMinesAndCheckFlag = function() {
     }
 }
 
+// Add or minus the number of mins left
+const changeMineLeft = function(add) {
+    if (add) {
+        state.mineLeft--;
+    } else {
+        state.mineLeft++
+    }
+}
+
 // Right click to put a flag on a cell 
 const flagTargetCell = function(row, column) {
     const status = state.status[row][column];
@@ -361,10 +398,12 @@ const flagTargetCell = function(row, column) {
     if (status === statusName.unopened) {
         updateTargetElStatus(row, column, statusName.flagged);
         updateTargetElClassList(row, column);
+        changeMineLeft(true);
       //if already has a flag, remove flag
     } else if (status === statusName.flagged) {
         updateTargetElStatus(row, column, statusName.unopened);
         updateTargetElClassList(row, column);
+        changeMineLeft(false);
     }
 }
 
@@ -387,7 +426,6 @@ const changeImageToPress = function(evt) {
         if (status === statusName.unopened && button === 0) {
             target.classList.remove(statusName.unopened);
             target.classList.add(statusName.pressing);
-        
         } 
         // If the target cell is opened number cell
         changeNearbyImage(id[0], id[1], status, mines, false);
@@ -440,7 +478,6 @@ const changeNearbyImage = function(row, column, status, mines, releaseMouse) {
             }
         }
     }
-
 }
 
 // When pressing cell instead of clicking it.
@@ -459,6 +496,7 @@ const leftClickHandler = function(evt) {
         const column = position[1];
         openTargetCell(row, column);
         openNearbyCell(row, column);
+        checkIfHasWon();
     }
 }
 
@@ -470,6 +508,7 @@ const rightClickHandler = function(evt) {
         const row = position[0];
         const column = position[1];
         flagTargetCell(row, column);
+        checkIfHasWon();
     }
 }
 
