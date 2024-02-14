@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
     <link rel="stylesheet" href="css/style.css">
     <script defer src="js/main.js"></script>
 </head>
+
 <body>
     <main>
 
-        <div class="container"> 
+        <div class="container">
             <div class="window">
                 <div class="title-bar">
                     <img class="icon" src="assets/icons/minesweeper.png" alt="Minesweeper">
@@ -22,8 +24,27 @@
                     </div>
                 </div>
                 <div class="menus">
-                    <button><span>G</span>ame</button>
-                    <button><span>H</span>elp</button>
+
+                    <div id="game-menu">
+                        <button id="game-menu-btn"><span>G</span>ame</button>
+                        <ul class="menu-content" id="game-content">
+                            <li><img class="tick" src="/assets/icons/tick.png" alt="tick"><span>N</span>ew</li>
+                            <div class="seperate-line"></div>
+                            <li><img class="tick" src="/assets/icons/tick.png" alt="tick"><span>B</span>egginer</li>
+                            <li><img class="tick show-tick" src="/assets/icons/tick.png"
+                                    alt="tick"><span>I</span>ntermeidate</li>
+                            <li><img class="tick" src="/assets/icons/tick.png" alt="tick"><span>E</span>xpert</li>
+                            <div class="seperate-line"></div>
+                            <li><img class="tick" src="/assets/icons/tick.png" alt="tick">Exit</li>
+                        </ul>
+                    </div>
+
+                    <div id="help-menu">
+                        <button id="help-menu-btn"><span>H</span>elp</button>
+                        <ul class="menu-content" id="help-content">
+                            <li><img class="tick" src="/assets/icons/tick.png" alt="tick"><span>A</span>bout</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="game-wrapper">
                     <div class="game">
@@ -44,9 +65,10 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </main>
 </body>
+
 </html>

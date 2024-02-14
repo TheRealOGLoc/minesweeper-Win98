@@ -586,15 +586,15 @@ const changeRestartButtonImage = function(event) {
     if (event === "mousedown") {
         removeRestartButtonClass();
         restartButtonEl.classList.add(restartButtonClassName.searching);
-    } else if (event === "mouseup") {
-        removeRestartButtonClass();
-        restartButtonEl.classList.add(restartButtonClassName.playing);
-    } else if (event === "win") {
+    }  else if (event === "win") {
         removeRestartButtonClass();
         restartButtonEl.classList.add(restartButtonClassName.win);
     } else if (event === "lose") {
         removeRestartButtonClass();
         restartButtonEl.classList.add(restartButtonClassName.lose);
+    } else if (event === "mouseup" || event === "playing") {
+        removeRestartButtonClass();
+        restartButtonEl.classList.add(restartButtonClassName.playing);
     }
 }
 
@@ -631,12 +631,14 @@ const changeImageToUnopen = function(evt) {
         if (button === 0 && target.classList.contains(statusName.pressing)) {
             target.classList.remove(statusName.pressing);
             target.classList.add(statusName.unopened);
+            
         }
         // If the target cell is opened number cell
         changeNearbyImage(id[0], id[1], status, mines, true);
-        changeRestartButtonImage("mouseup");
+        if (evt.type !== "mouseout") {
+            changeRestartButtonImage("mouseup");
+        }
     }
-    
 }
 
 // Change the view of nearby cell when clicking an opened cell
