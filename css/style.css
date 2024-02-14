@@ -221,7 +221,7 @@ body {
     background-image: url(../assets/images/num-nine.svg);
 }
 
-#restart {
+.restart {
     height: 14px;
     width: 14px;
     margin: 0 auto;
@@ -231,6 +231,12 @@ body {
     border-bottom: 1px solid rgb(195, 195, 195);
     box-shadow: 0.7px 0.7px rgb(0, 0, 0);
     background-color: rgb(195, 195, 195);
+    
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.playing {
     background-image: url(../assets/icons/playing.png);
     background-size: contain;
     background-repeat: no-repeat;

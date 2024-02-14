@@ -108,15 +108,15 @@ const mineSize = 10; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
 const state = {
-    size: null,
-    level: null,
-    difficulty: null,
-    mines: [],
+    size: null, //
+    level: null, //
+    difficulty: null, //
+    mines: [], 
     status: [],
     minesCreated: false,
     statusCreated: false,
     timer: [0, 0, 0],
-    mineLeft: 0,
+    mineLeft: 0, //
     win: null,
     firstClick: false,
 };
@@ -130,7 +130,7 @@ const mineLeftUnitsEl = document.querySelector(".mine-left-units");
 const timerHundredsEl = document.querySelector(".timer-hundreds");
 const timerTensEl = document.querySelector(".timer-tens");
 const timerUnitsEl = document.querySelector(".timer-units");
-const restartButtonEl = document.getElementById("restart");
+const restartButtonEl = document.querySelector(".restart")
 
 /*----- classes -----*/
 
@@ -663,12 +663,30 @@ const rightClickHandler = function(evt) {
     }
 }
 
+// Reset state to initial condition
+const resetState = function() {
+    state.size = null;
+    state.level = null;
+    state.difficulty = null;
+    state.mines = [];
+    state.status = [];
+    state.minesCreated = false;
+    state.statusCreated = false;
+    state.timer = [0, 0, 0];
+    state.mineLeft = 0;
+    state.win = null;
+    state.firstClick = false;    
+}
+
 // Restart game with different difficulty
 const restartGame = function(difficulty) {
-    if (difficulty === undefined) {
-        init(state.difficulty);
+    const currentDifficulty = state.difficulty;
+    clearInterval(Timer.timer)
+    resetState();
+    if (Object.values(gameDifficulty).includes(difficulty)) {
+        init(difficulty);
     } else {
-        init(difficulty)
+        init(currentDifficulty);
     }
     bindEventListener();
 } 
