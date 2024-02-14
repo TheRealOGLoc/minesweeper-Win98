@@ -110,13 +110,19 @@ body {
     text-align:center;
     font-size: 7px;
     font-weight: bolder;
+    background-color: rgb(195, 195, 195);
     border-top: 0.5px solid rgb(253, 255, 255);
     border-left: 0.5px solid rgb(253, 255, 255);
     border-right: 0.5px solid black;
     border-bottom: 0.5px solid black;
 }
 
-.exit {
+#minimum {
+    font-weight: bolder;
+    font-size: 10px;
+}
+
+#exit {
     margin-right: 2px;
 }
 
@@ -132,11 +138,59 @@ body {
     margin: none;
     font-weight: 550;
     letter-spacing: 0.3px;
+    padding-top: 1px;
+    padding-left: 6px;
+    padding-right: 0px;
+    padding-bottom: 1px;
 }
 
 .menus span {
     text-decoration: underline;
 }
+
+.status {
+    display: flex;
+    height: 15px;
+    border-top: var(--border-width) solid grey;
+    border-left: var(--border-width) solid grey;
+    border-right: var(--border-width) solid white;
+    border-bottom: var(--border-width) solid white;
+    padding: 3px;
+    margin-bottom: 3px;
+}
+
+#mine-left {
+    background-image: url(../assets/images/num-background.svg);
+    height: 15px;
+    width: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#restart {
+    height: 14px;
+    width: 14px;
+    margin: 0 auto;
+    border-top: 1px solid rgb(253, 255, 255);
+    border-left: 1px solid rgb(253, 255, 255);
+    border-right: 1px solid rgb(195, 195, 195);
+    border-bottom: 1px solid rgb(195, 195, 195);
+    box-shadow: 0.7px 0.7px rgb(0, 0, 0);
+    background-color: rgb(195, 195, 195);
+}
+
+#restart:hover {
+    cursor: pointer;
+}
+
+#timer {
+    background-image: url(../assets/images/num-background.svg);
+    height: 15px;
+    width: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 
 .mine-row {
     height: var(--mine-size);

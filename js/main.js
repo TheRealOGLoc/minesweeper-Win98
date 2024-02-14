@@ -83,7 +83,7 @@ const state = {
     status: [],
     minesCreated: false,
     statusCreated: false,
-    time: 0,
+    timer: [0, 0, 0],
     mineLeft: 0,
     win: null,
     firstClick: false,
@@ -93,12 +93,35 @@ const state = {
 const minesEl = document.querySelector(".mines");
 const containerEl = document.querySelector(".container");
 
+/*----- classes -----*/
+class Timer {
+    static hundreds = 0;
+    static tens = 0;
+    static units = 0;
+    static timeIncrement = () => {
+        if (this.hundreds === 9 && this.tens === 9 && this.units === 9) {
+            return [9, 9, 9];
+        }
+        this.units++;
+        if (this.units === 10) {
+            this.tens++;
+            this.units = 0;
+        } 
+        if (this.tens === 10) {
+            this.hundreds++;
+            this.tens = 0;
+        }
+        console.log(this.hundreds, this.tens, this.units);
+    }
+}
+
 /*----- functions -----*/
 const init = function() {
     state.size = beginnerSize;
     state.level = level.beginner;
     state.win = winStatus.playing;
     state.mineLeft = level.beginner;
+    resetTimer();
     setElementsSize();
     createMinesArray(state.size);
     allocateMines();
@@ -109,7 +132,7 @@ const init = function() {
 
 // Set the minesEl's width and height
 const setElementsSize = function() {
-    containerEl.style.width = `${mineSize * state.size.column + 15}px`
+    containerEl.style.width = `${mineSize * state.size.column + 16}px`
     minesEl.style.width = `${mineSize * state.size.column}px`
     minesEl.style.height = `${mineSize * state.size.row}px`
 }
@@ -244,6 +267,7 @@ const checkIfHasWon = function() {
         }
         if (correctFlagsCount === level) {
             changeWinningCondition(winStatus.win);
+            clearInterval(state.timer);
         }
     }
 }
@@ -280,6 +304,7 @@ const openTargetCell = function(row, column) {
         updateTargetElClassList(row, column);
         showAllMinesAndCheckFlag();
         changeWinningCondition(winStatus.lose);
+        clearInterval(state.timer)
     } 
 }
 
@@ -334,7 +359,15 @@ const openNearbyCell = function(row, column) {
     }
 }
 
-// 
+// Reset timer to zero
+const resetTimer = function() {
+    Timer.hundreds = 0;
+    Timer.tens = 0;
+    Timer.units = 0;
+    state.timer = [0, 0, 0];
+}
+
+// Prevent the first click is mine
 const preventFirstClickMine = function(row, column) {
     if (!state.firstClick) {
         const mines = state.mines;
@@ -353,6 +386,8 @@ const preventFirstClickMine = function(row, column) {
             modifyMinesArray();
         }
         state.firstClick = true;
+        // Start timer
+        state.timer = setInterval(Timer.timeIncrement, 1000);
     }
 }
 

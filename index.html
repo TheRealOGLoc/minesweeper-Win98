@@ -16,9 +16,9 @@
                     <img class="icon" src="assets/icons/minesweeper.png" alt="Minesweeper">
                     <div class="game-name">Minesweeper</div>
                     <div class="control-button">
-                        <button class="minimum">_</button>
-                        <button class="maximum">⧠</button>
-                        <button class="exit">✖</button>
+                        <button id="minimum">-</button>
+                        <button id="maximum">⧠</button>
+                        <button id="exit">✖</button>
                     </div>
                 </div>
                 <div class="menus">
@@ -27,7 +27,19 @@
                 </div>
                 <div class="game-wrapper">
                     <div class="game">
-                        <div class="status"></div>
+                        <div class="status">
+                            <div id="mine-left">
+                                <div class="mine-left-hundreds"></div>
+                                <div class="mine-left-tens"></div>
+                                <div class="mine-left-units"></div>
+                            </div>
+                            <button id="restart"></button>
+                            <div id="timer">
+                                <div class="timer-hundreds"></div>
+                                <div class="timer-tens"></div>
+                                <div class="timer-units"></div>
+                            </div>
+                        </div>
                         <div class="mines">
                         </div>
                     </div>
