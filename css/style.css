@@ -7,8 +7,8 @@
     --expert-height: 16;
     --mine-size: 10px;
     --border-width: 1.5px;
-    --icon-size: 12px;
-    --title-bar-height: 14px;
+    --icon-size: 10px;
+    --title-bar-height: 12px;
     --game-name-font-size: 9.2px;
     --letter-space: 0.7px;
     --font-weight: 550;
@@ -64,7 +64,6 @@ body {
 
 .icon {
     margin: 0 1px;
-    ;
     width: var(--icon-size);
     height: var(--icon-size);
 }
@@ -231,18 +230,27 @@ body {
     border-bottom: 1px solid rgb(195, 195, 195);
     box-shadow: 0.7px 0.7px rgb(0, 0, 0);
     background-color: rgb(195, 195, 195);
-    
     background-size: contain;
     background-repeat: no-repeat;
 }
 
 .playing {
     background-image: url(../assets/icons/playing.png);
-    background-size: contain;
-    background-repeat: no-repeat;
 }
 
-#restart:active {
+.searching {
+    background-image: url(../assets/icons/searching.png);
+}
+
+.win {
+    background-image: url(../assets/icons/win.png);
+}
+
+.lose {
+    background-image: url(../assets/icons/lose.png);
+}
+
+.restart:active {
     border-top: 1.3px solid rgb(0, 0, 0);
     border-left: 1.3px solid rgb(0, 0, 0);
     border-right: 1px solid rgb(253, 255, 255);

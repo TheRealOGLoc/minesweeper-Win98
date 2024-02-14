@@ -96,6 +96,14 @@ const winStatus = {
     lose: -1,
 }
 
+// The restart button class name
+const restartButtonClassName = {
+    playing: "playing",
+    searching: "searching",
+    win: "win",
+    lose: "lose"
+}
+
 // Use to determine the game level in the init function
 const gameDifficulty = {
     beginner: "beginner",
@@ -356,6 +364,7 @@ const checkIfHasWon = function() {
         }
         if (correctFlagsCount === level) {
             changeWinningCondition(winStatus.win);
+            changeRestartButtonImage("win");
             clearInterval(Timer.timer);
         }
     }
@@ -396,6 +405,7 @@ const openTargetCell = function(row, column) {
         showAllMinesAndCheckFlag();
         changeWinningCondition(winStatus.lose);
         clearInterval(Timer.timer);
+        changeRestartButtonImage("lose");
     } 
 }
 
@@ -563,6 +573,31 @@ const convertTargetIDtoPosition = function(target) {
     return [parseInt(position[0]), parseInt(position[1])]
 }
 
+// Remove restart button's all condition class
+const removeRestartButtonClass = function() {
+    restartButtonEl.classList.remove(restartButtonClassName.playing);
+    restartButtonEl.classList.remove(restartButtonClassName.searching);
+    restartButtonEl.classList.remove(restartButtonClassName.win);
+    restartButtonEl.classList.remove(restartButtonClassName.lose);
+}
+
+// Change restart button to new image
+const changeRestartButtonImage = function(event) {
+    if (event === "mousedown") {
+        removeRestartButtonClass();
+        restartButtonEl.classList.add(restartButtonClassName.searching);
+    } else if (event === "mouseup") {
+        removeRestartButtonClass();
+        restartButtonEl.classList.add(restartButtonClassName.playing);
+    } else if (event === "win") {
+        removeRestartButtonClass();
+        restartButtonEl.classList.add(restartButtonClassName.win);
+    } else if (event === "lose") {
+        removeRestartButtonClass();
+        restartButtonEl.classList.add(restartButtonClassName.lose);
+    }
+}
+
 // When mouse down
 const changeImageToPress = function(evt) {
     const target = evt.target;
@@ -575,9 +610,11 @@ const changeImageToPress = function(evt) {
         if (status === statusName.unopened && button === 0) {
             target.classList.remove(statusName.unopened);
             target.classList.add(statusName.pressing);
+
         } 
         // If the target cell is opened number cell
         changeNearbyImage(id[0], id[1], status, mines, false);
+        changeRestartButtonImage("mousedown");
     }
     
 }
@@ -597,6 +634,7 @@ const changeImageToUnopen = function(evt) {
         }
         // If the target cell is opened number cell
         changeNearbyImage(id[0], id[1], status, mines, true);
+        changeRestartButtonImage("mouseup");
     }
     
 }
@@ -688,6 +726,7 @@ const restartGame = function(difficulty) {
     } else {
         init(currentDifficulty);
     }
+    changeRestartButtonImage("playing");
     bindEventListener();
 } 
 
