@@ -1,25 +1,30 @@
 /*----- constants -----*/
+// Beginner mine size
 const beginnerSize = {
     row: 9,
     column: 9, 
 }
 
+// Intermediate mine size
 const intermediateSize = {
     row: 16,
     column: 16
 }
 
+// Expert mine size
 const expertSize = {
     row: 20,
     column: 30
 }
 
+// Different level of the game
 const level = {
     beginner: 10,
     intermediate: 30,
     expert: 80,
 }
 
+// Use to search the cell in different direction
 const offsetDirection = {
     N:  [-1,  0],
     NW: [-1, -1],
@@ -31,6 +36,7 @@ const offsetDirection = {
     NE: [-1,  1]
 }
 
+// Use to represent how many mines nearby in the mine field array
 const mineStatus = {
     mine: -1,
     zeroMine: 0,
@@ -44,6 +50,7 @@ const mineStatus = {
     eightMine: 8,
 }
 
+// The timer and mine left indicator class name
 const numImageClassName = [
     "num-zero",
     "num-one",
@@ -57,6 +64,7 @@ const numImageClassName = [
     "num-nine"
 ]
 
+// The cell status names
 const statusName = {
     unopened: "unopened",
     opened: "opened",
@@ -67,6 +75,7 @@ const statusName = {
     pressing: "pressing",
 }
 
+// The mine class name
 const mineClassName = [
     "zeroMine",
     "oneMine",
@@ -80,18 +89,28 @@ const mineClassName = [
     "mine"
 ]
 
+// The winning status
 const winStatus = {
     playing: 0,
     win: 1,
     lose: -1,
 }
 
+// Use to determine the game level in the init function
+const gameDifficulty = {
+    beginner: "beginner",
+    intermediate: "intermediate",
+    expert: "expert"
+}
+
+// Width and height of a mine cell
 const mineSize = 10; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
 const state = {
     size: null,
     level: null,
+    difficulty: null,
     mines: [],
     status: [],
     minesCreated: false,
@@ -111,7 +130,7 @@ const mineLeftUnitsEl = document.querySelector(".mine-left-units");
 const timerHundredsEl = document.querySelector(".timer-hundreds");
 const timerTensEl = document.querySelector(".timer-tens");
 const timerUnitsEl = document.querySelector(".timer-units");
-
+const restartButtonEl = document.getElementById("restart");
 
 /*----- classes -----*/
 
@@ -139,10 +158,23 @@ class Timer {
 }
 
 /*----- functions -----*/
-const init = function() {
-    state.size = beginnerSize;
-    state.level = level.beginner;
-    state.mineLeft = level.beginner;
+const init = function(difficulty) {
+    if (difficulty === gameDifficulty.beginner) {
+        state.difficulty = gameDifficulty.beginner
+        state.size = beginnerSize;
+        state.level = level.beginner;
+        state.mineLeft = level.beginner;
+    } else if (difficulty === gameDifficulty.intermediate) {
+        state,difficulty = gameDifficulty.intermediate
+        state.size = intermediateSize;
+        state.level = level.intermediate;
+        state.mineLeft = level.intermediate;
+    } else if (difficulty === gameDifficulty.expert) {
+        state.difficulty = gameDifficulty.expert
+        state.size = expertSize;
+        state.level = level.expert;
+        state.mineLeft = level.expert;
+    }
     state.win = winStatus.playing;
     resetTimer();
     setElementsSize();
@@ -256,6 +288,7 @@ const rendMineLeftCount = function() {
     updateNumberClass(mineLeftHundredsEl, mineLeftHundredNum);
 }
 
+// Change the timer view
 const rendTimer = function() {
     const timer = state.timer;
     const timerUnitNum = timer[2];
@@ -264,6 +297,11 @@ const rendTimer = function() {
     updateNumberClass(timerUnitsEl, timerUnitNum);
     updateNumberClass(timerTensEl, timerTenNum);
     updateNumberClass(timerHundredsEl, timerHundredNum);
+}
+
+// Clean the mine field
+const cleanMineField = function() {
+    minesEl.textContent = '';
 }
 
 // Rend the mine field
@@ -282,10 +320,6 @@ const rendInitialMinesField = function() {
         }
         minesEl.appendChild(eachRowEl);     // append to the mines element
     }
-}
-
-const rendNumberOfMineLeft = function() {
-
 }
 
 // Get target mine element with position
@@ -629,15 +663,25 @@ const rightClickHandler = function(evt) {
     }
 }
 
+// Restart game with different difficulty
+const restartGame = function(difficulty) {
+    if (difficulty === undefined) {
+        init(state.difficulty);
+    } else {
+        init(difficulty)
+    }
+    bindEventListener();
+} 
+
 // Render all the content
 const render = function() {
+    cleanMineField();
     rendInitialMinesField();
     rendMineLeftCount();
     rendTimer();
 }
 
-init();
-
+init(gameDifficulty.beginner);
 
 /*----- event listeners -----*/
 const bindEventListener = function() {
@@ -649,6 +693,7 @@ const bindEventListener = function() {
             target.addEventListener("contextmenu", rightClickHandler);
         }
     }
+    restartButtonEl.addEventListener("click", restartGame);
 }
 // Disable the right click menu
 document.addEventListener('contextmenu', event => event.preventDefault());
