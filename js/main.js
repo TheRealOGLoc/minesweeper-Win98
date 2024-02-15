@@ -896,7 +896,8 @@ const restartGame = function(difficulty) {
 
 // Double click to restart the game
 const restartBeginnerGameByIcon = function() {
-    if (containerEl.style.display === "none") {
+    if (containerEl.style.display === "none" &&
+        minesweeperTaskEl.style.display === "none") {
         restartBeginnerGame();
         showGame();
     }

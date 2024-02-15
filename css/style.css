@@ -71,7 +71,8 @@ body {
 
 .title-bar {
     display: flex;
-    background-color: rgb(9, 9, 171);
+    background: linear-gradient(to right, rgb(9, 9, 171), rgba(12,130,204,255));
+    /* background-color: rgb(9, 9, 171); */
     height: var(--title-bar-height);
     align-items: center;
 }
@@ -91,6 +92,12 @@ body {
     border-right: 1.25px solid rgb(195, 195, 195);
     border-bottom: 1.25px solid rgb(195, 195, 195);
     border-radius: 2.5px;
+}
+
+@media only screen and (max-width: 900px) {
+    .container {
+        left: 5vw;
+    }
 }
 
 .window {
@@ -145,7 +152,7 @@ body {
 }
 
 #quit {
-    margin-right: 4px;
+    margin-right: 2px;
 }
 
 .menus {
@@ -540,6 +547,12 @@ li:hover {
     background-size: 3px 3px;
 }
 
+@media only screen and (max-width: 900px) {
+    .minesweeper-task {
+        width: 20vw;
+    }
+}
+
 .minesweeper-task img {
     margin-left: 0px;
     padding-top: 1px;
@@ -551,6 +564,13 @@ li:hover {
     font-size: 18px;
     letter-spacing: 1px;
 }
+
+@media only screen and (max-width: 500px) {
+    .minesweeper-task span {
+        display: none;
+    }
+}
+
 
 .empty-space {
     margin: 0 auto;
