@@ -1,7 +1,7 @@
 <h1 align="center">Minesweeper Windows98</h1>
 
 <p align="center">
-<img src="/assets/images/preview.png"/>
+<img src="/assets/images/Preview.png"/>
 </p>
 
 <p align="center">Classic Minesweeper game with Win98 theme</p>
