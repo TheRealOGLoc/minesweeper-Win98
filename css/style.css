@@ -16,14 +16,13 @@
 }
 
 body {
-    /* scale:200%; */
-    height: 100%;
+    margin: 0;
     box-sizing: border-box;
-    background-color: var(--background-color);
-    /* background-image: url(../assets/images/desktop-background.jpg); */
+    /* background-color: var(--background-color); */
+    background-image: url(../assets/images/desktop-background.jpg);
+    height: 97vh;
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
 }
 
 * {
@@ -83,6 +82,8 @@ body {
 
 .container {
     position: absolute;
+    top: 200px;
+    left: 200px;
     margin: 0 auto;
     border: 1.25px solid white;
     border-top: 1.25px solid rgb(253, 255, 255);
@@ -400,7 +401,6 @@ li:hover {
     display: flex;
 }
 
-
 .mine-row {
     height: var(--mine-size);
     width: auto;
@@ -474,4 +474,143 @@ li:hover {
 
 .flagMissed {
     background-image: url("../assets/icons/flag-missed.svg");
+}
+
+#task-bar {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    height: 40px;
+    background-color: rgba(192,192,192,255);
+    border-top: 1.5px solid rgb(253, 255, 255);
+}
+
+#start {
+    width: 90px;
+    margin: 2px;
+    background-color: rgba(192,192,192,255);
+    border-top: 2px solid rgb(253, 255, 255);
+    border-left: 2px solid rgb(253, 255, 255);
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.vertical-divider {
+    width: 1px;
+    height: 36px;
+    border-left: 1px solid grey;
+    border-right: 1px solid white;
+    margin-left: 1px;
+    margin-right: 2px;
+    margin-top: 1px;
+}
+
+#start img {
+    padding-top: 5px;
+    width: 25px;
+}
+
+#start span {
+    font-size: 23px;
+    letter-spacing: 1px;
+}
+
+#start:active {
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid rgb(253, 255, 255);
+    border-bottom: 2px solid rgb(253, 255, 255);
+    padding-top: 2px;
+}
+
+#minesweeper-task {
+    height: 35px;
+    display: flex;
+    width: 270px;
+    margin: 2px;
+    background-color: rgba(192,192,192,255);
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid rgb(253, 255, 255);
+    border-bottom: 2px solid rgb(253, 255, 255);
+    background: rgb(235, 235, 235);
+    background-image: radial-gradient(rgb(107, 107, 107) 1px, transparent 0);
+    background-size: 3px 3px;
+}
+
+#minesweeper-task img {
+    margin: 0;
+    padding-top: 3px;
+    width: 25px;
+}
+
+#minesweeper-task span {
+    margin-left: 5px;
+    font-size: 22px;
+    letter-spacing: 1px;
+}
+
+.empty-space {
+    margin: 0 auto;
+}
+
+#notification {
+    display: flex;
+    width: 160px;
+    margin: 2px;
+    background-color: rgba(192,192,192,255);
+    border-top: 2px solid grey;
+    border-left: 2px solid grey;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+#notification img {
+    width: 25px;
+    margin: 3px;
+}
+
+#notification span {
+    margin: 0 auto;
+    font-size: 22px;
+    letter-spacing: 1px;
+}
+
+#program-icons {
+    height: 50vh;
+    width: 100px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.desktop-icon {
+    height: 90px;
+}
+
+.desktop-icon img{
+    width: 40px;
+    padding-left: 28px;
+    padding-bottom: 0px;
+}
+
+.desktop-icon p{
+    text-align: center;
+    font-size: 16px;
+    height: 20px;
+    margin: 0;
+    color: white;
+    background-color: rgb(19,123,129);
+    width: 80px;
+    margin-left: 10px;
+}
+
+.minesweeper-program {
+    position: relative;
+}
+
+.shortcut {
+    position: absolute;
+    left: 10px;
 }

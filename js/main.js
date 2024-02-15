@@ -793,20 +793,19 @@ const pressingCellEventListener = function(target) {
     target.addEventListener("mouseout", changeImageToUnopen)
 }
 
+// Calculate the offset of mouse
 const dragTitleMouseDown = function(evt) {
     MouseOffset.offsetX = evt.clientX - containerEl.offsetLeft;
     MouseOffset.offsetY = evt.clientY - containerEl.offsetTop;
     document.addEventListener("mousemove", onMouseMove);
 }
 
-
+// Calculate and update the containerEl's position
 function onMouseMove(event) {
-    // 计算div新的位置
+    // Calculate new positon
     let newX = event.clientX - MouseOffset.offsetX;
     let newY = event.clientY - MouseOffset.offsetY;
-   
-   
-    // 更新div的位置
+    // Update new position
     containerEl.style.left = newX + "px";
     containerEl.style.top = newY + "px";
 }
