@@ -154,6 +154,9 @@ const titleQuitButtonEl = document.getElementById("quit");
 const menuQuitButtonEl = document.getElementById("menu-quit");
 const minesweeperGameIconEl = document.getElementById("minesweeper-program");
 const titleMinimumButtonEl = document.getElementById("minimum");
+const gameIconNameEl = document.getElementById("minesweeper-program-name");
+const bodyEl = document.getElementsByTagName("body")[0];
+
 
 /*----- classes -----*/
 
@@ -706,6 +709,22 @@ const closeAllMenuIfOut = function(evt) {
     }
 }
 
+// Add select class to game icon
+const selectMinesweeperIcon = function() {
+    const iconClasses = gameIconNameEl.classList;
+    if (!iconClasses.contains("selected")) {
+        iconClasses.add("selected");
+    }
+}
+
+// Remove select class from game icon
+const deselectedMinesweeperIcon = function(evt) {
+    const tagName = evt.target.tagName;
+    if (tagName === "BODY" || tagName === "MAIN") {
+        gameIconNameEl.classList.remove("selected");
+    } 
+}
+
 // According to the current difficulty, change the tick in the game menu
 const setCurrentDifficultyTick = function() {
     const currentDifficulty = state.difficulty + "-game";
@@ -954,8 +973,10 @@ const bindEventListener = function() {
     titleQuitButtonEl.addEventListener("click", quitGame);
     menuQuitButtonEl.addEventListener("click", quitGame);
     minesweeperGameIconEl.addEventListener("dblclick", restartBeginnerGameByIcon);
+    minesweeperGameIconEl.addEventListener("click", selectMinesweeperIcon);
     titleMinimumButtonEl.addEventListener("click", minimumOrshowGame);
     minesweeperTaskEl.addEventListener("click", minimumOrshowGame);
+    bodyEl.addEventListener("click", deselectedMinesweeperIcon);
 }
 // Disable the right click menu
 document.addEventListener('contextmenu', event => event.preventDefault());
