@@ -30,11 +30,13 @@
  - If you close the minesweeper window, double click the icon in the desktop.
  - Click the minimum will hide the window.
  - Click the minesweeper in the task bar will open or hide the window.
+ - The window is draggable.
 
  ## Features 📍 
 
  - ✔️ Classic Windows 98 style
  - ✔️ Basic minesweeper functions
+ - ✔️ Draggable window
  - ✔️ Difficulty selector
  - ✔️ Number of mines left count
  - ✔️ First click safety
