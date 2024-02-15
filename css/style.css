@@ -144,7 +144,7 @@ body {
     background-color: rgb(195, 195, 195);
     font-size: 20px;
     font-weight: 550;
-    letter-spacing: 0.3.75px;
+    letter-spacing: 0.75px;
     padding: 0;
     border-top: 1.25px solid rgb(195, 195, 195);
     border-left: 1.25px solid rgb(195, 195, 195);
@@ -159,7 +159,7 @@ body {
 }
 
 #help-menu-btn {
-    width: 5px;
+    width: 55px;
 }
 
 .menus button:hover {
