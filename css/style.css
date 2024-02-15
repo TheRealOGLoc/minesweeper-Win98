@@ -28,6 +28,7 @@ body {
 
 * {
     font-family: win98;
+    user-select: none;
 }
 
 .game {
@@ -66,6 +67,7 @@ body {
     margin: 0 2.5px;
     width: var(--icon-size);
     height: var(--icon-size);
+    user-select: none;
 }
 
 .title-bar {
@@ -80,8 +82,8 @@ body {
 }
 
 .container {
+    position: absolute;
     margin: 0 auto;
-    margin-top: 200px;
     border: 1.25px solid white;
     border-top: 1.25px solid rgb(253, 255, 255);
     border-left: 1.25px solid rgb(253, 255, 255);
@@ -121,6 +123,15 @@ body {
     border-left: 1.25px solid rgb(253, 255, 255);
     border-right: 1.25px solid black;
     border-bottom: 1.25px solid black;
+}
+
+.black-button:active {
+    padding-left: 1px;
+    padding-top: 1px;
+    border-top: 1.25px solid black;
+    border-left: 1.25px solid black;
+    border-right: 1.25px solid rgb(253, 255, 255);
+    border-bottom: 1.25px solid rgb(253, 255, 255);
 }
 
 #minimum {
@@ -179,7 +190,7 @@ body {
     border-top: 1.25px solid grey;
     border-left: 1.25px solid grey;
     border-right: 1.25px solid rgb(253, 255, 255);
-    border-bottom: 1.25px solid rgb(253, 255, 255)
+    border-bottom: 1.25px solid rgb(253, 255, 255);
 }
 
 

@@ -21,7 +21,7 @@ const expertSize = {
 const level = {
     beginner: 10,
     intermediate: 30,
-    expert: 80,
+    expert: 90,
 }
 
 // Use to search the cell in different direction
@@ -132,6 +132,7 @@ const state = {
 /*----- cached elements  -----*/
 const minesEl = document.querySelector(".mines");
 const containerEl = document.querySelector(".container");
+const titleBarEl = document.querySelector(".title-bar");
 const mineLeftHundredsEl = document.querySelector(".mine-left-hundreds");
 const mineLeftTensEl = document.querySelector(".mine-left-tens");
 const mineLeftUnitsEl = document.querySelector(".mine-left-units");
@@ -175,6 +176,7 @@ class Timer {
     }
 }
 
+// Use to check which menu is open
 class MenuContent {
     static gameMenuOpen = false;
     static helpMenuOpen = false;
@@ -195,7 +197,15 @@ class MenuContent {
     }
 }
 
+// Seve the mouse offset
+class MouseOffset {
+    static offsetX;
+    static offsetY;
+}
+
 /*----- functions -----*/
+
+// Initialization function, entry point of the game
 const init = function(difficulty) {
     if (difficulty === gameDifficulty.beginner) {
         state.difficulty = gameDifficulty.beginner
@@ -783,6 +793,25 @@ const pressingCellEventListener = function(target) {
     target.addEventListener("mouseout", changeImageToUnopen)
 }
 
+const dragTitleMouseDown = function(evt) {
+    MouseOffset.offsetX = evt.clientX - containerEl.offsetLeft;
+    MouseOffset.offsetY = evt.clientY - containerEl.offsetTop;
+    document.addEventListener("mousemove", onMouseMove);
+}
+
+
+function onMouseMove(event) {
+    // 计算div新的位置
+    let newX = event.clientX - MouseOffset.offsetX;
+    let newY = event.clientY - MouseOffset.offsetY;
+   
+   
+    // 更新div的位置
+    containerEl.style.left = newX + "px";
+    containerEl.style.top = newY + "px";
+}
+   
+
 // All left click function wrapper
 const leftClickHandler = function(evt) {
     if (evt.button === 0 && state.win === winStatus.playing) {
@@ -884,6 +913,10 @@ const bindEventListener = function() {
     restartButtonEl.addEventListener("click", restartGame);
     gameMenuButtonEl.addEventListener("click", showMenuContent);
     helpMenuButtonEl.addEventListener("click", showMenuContent);
+    titleBarEl.addEventListener("mousedown", dragTitleMouseDown)
+    document.addEventListener("mouseup", function() {
+        document.removeEventListener("mousemove", onMouseMove);
+    });
 }
 // Disable the right click menu
 document.addEventListener('contextmenu', event => event.preventDefault());
