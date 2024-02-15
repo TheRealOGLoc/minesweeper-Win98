@@ -403,65 +403,65 @@ li:hover {
 }
 
 .zeroMine {
-    background-image: url("/assets/icons/zero.svg");
+    background-image: url("../assets/icons/zero.svg");
 }
 
 .oneMine {
-    background-image: url("/assets/icons/one.svg");
+    background-image: url("../assets/icons/one.svg");
 }
 
 .twoMine {
-    background-image: url("/assets/icons/two.svg");
+    background-image: url("../assets/icons/two.svg");
 }
 
 .threeMine {
-    background-image: url("/assets/icons/three.svg");
+    background-image: url("../assets/icons/three.svg");
 }
 
 .fourMine {
-    background-image: url("/assets/icons/four.svg");
+    background-image: url("../assets/icons/four.svg");
 }
 
 .fiveMine {
-    background-image: url("/assets/icons/five.svg");
+    background-image: url("../assets/icons/five.svg");
 }
 
 .sixMine {
-    background-image: url("/assets/icons/six.svg");
+    background-image: url("../assets/icons/six.svg");
 }
 
 .sevenMine {
-    background-image: url("/assets/icons/seven.svg");
+    background-image: url("../assets/icons/seven.svg");
 }
 
 .eightMine {
-    background-image: url("/assets/icons/eight.svg");
+    background-image: url("../assets/icons/eight.svg");
 }
 
 .mine {
-    background-image: url("/assets/icons/mine.svg");
+    background-image: url("../assets/icons/mine.svg");
 }
 
 .unopened {
-    background-image: url("/assets/icons/unopened-square.svg");
+    background-image: url("../assets/icons/unopened-square.svg");
 }
 
 .pressing {
-    background-image: url("/assets/icons/pressed.svg");
+    background-image: url("../assets/icons/pressed.svg");
 }
 
 .flagged {
-    background-image: url("/assets/icons/flag.svg");
+    background-image: url("../assets/icons/flag.svg");
 }
 
 .targetExploded {
-    background-image: url("/assets/icons/mine-explode.svg");
+    background-image: url("../assets/icons/mine-explode.svg");
 }
 
 .exploded {
-    background-image: url("/assets/icons/mine.svg");
+    background-image: url("../assets/icons/mine.svg");
 }
 
 .flagMissed {
-    background-image: url("/assets/icons/flag-missed.svg");
+    background-image: url("../assets/icons/flag-missed.svg");
 }
