@@ -1,4 +1,4 @@
-<h1 align="center">Minesweeper Windows 98 Style</h1>
+<h1 align="center">Minesweeper Windows98</h1>
 
 <p align="center">
 <img src="/assets/images/preview.png"/>
@@ -39,7 +39,7 @@
  - ✔️ Number of mines left count
  - ✔️ First click safety
  - ✔️ Open, minimise or close the window
- - .....
+ - ......
 
  ## Chanllenges 🔒
 
@@ -49,4 +49,4 @@
  - Check nearby mines
  - Check nearby flag correct or not
  - First click safety
- - .....
+ - ......
