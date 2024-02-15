@@ -392,6 +392,7 @@ const checkIfHasWon = function() {
                 }
             }
         }
+        // If the number of correct flag equals the level mine
         if (correctFlagsCount === level) {
             changeWinningCondition(winStatus.win);
             changeRestartButtonImage("win");
@@ -512,6 +513,7 @@ const preventFirstClickMine = function(row, column) {
         if (mines[row][column] === mineStatus.mine) {
             mines[row][column] = mineStatus.zeroMine;
             let hasMovedMine = false;
+            // Add a new mine to new location
             while (!hasMovedMine) {
                 const newMineRow = Math.floor(Math.random() * size.row);
                 const newMineColumn = Math.floor(Math.random() * size.column);
@@ -560,9 +562,11 @@ const showAllMinesAndCheckFlag = function() {
         for (let j = 0; j < size.column; j++) {
             const targetStatus = status[i][j];
             const targetMine = mines[i][j];
+            // If the target mine has not been flagged, open it
             if (targetMine === mineStatus.mine && targetStatus === statusName.unopened) {
                 updateTargetElStatus(i, j, statusName.exploded);
                 updateTargetElClassList(i, j);
+            // If the target mine is miss flagged, set it to miss flag
             } else if (targetMine !== mineStatus.mine && targetStatus === statusName.flagged) {
                 updateTargetElStatus(i, j, statusName.flagMissed);
                 updateTargetElClassList(i, j);
@@ -688,9 +692,20 @@ const closeAllMenuIfOut = function(evt) {
     }
 }
 
+// According to the current difficulty, change the tick in the game menu
+const setCurrentDifficultyTick = function() {
+    const currentDifficulty = state.difficulty + "-game";
+    const difficultyButtons = [beginnerGameButtonEl, intermediateGameButtonEl, expertGameButtonEl];
+    for (let i = 0; i < 3; i++) {
+        if (difficultyButtons[i].id === currentDifficulty) {
+            difficultyButtons[i].childNodes[0].classList.add("show-tick");
+        } else {
+            difficultyButtons[i].childNodes[0].classList.remove("show-tick");
+        }
+    }
+}
 
-
-// When mouse down
+// When mouse down (pressing an mine cell)
 const changeImageToPress = function(evt) {
     const target = evt.target;
     const button = evt.button;
@@ -711,7 +726,7 @@ const changeImageToPress = function(evt) {
     
 }
 
-// When mouse up
+// When mouse up (releasing an mine cell)
 const changeImageToUnopen = function(evt) {
     const target = evt.target;
     const button = evt.button;
@@ -825,14 +840,17 @@ const restartGame = function(difficulty) {
     bindEventListener();
 } 
 
+// Restart a beginner game
 const restartBeginnerGame = function() {
     restartGame(gameDifficulty.beginner);
 }
 
+// Restart a intermediate game
 const restartIntermediateGame = function() {
     restartGame(gameDifficulty.intermediate);
 }
 
+// Restart a expert game
 const restartExpertGame = function() {
     restartGame(gameDifficulty.expert);
 }
@@ -842,6 +860,7 @@ const restartExpertGame = function() {
 const render = function() {
     cleanMineField();
     rendInitialMinesField();
+    setCurrentDifficultyTick();
     rendMineLeftCount();
     rendTimer();
 }
