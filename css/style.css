@@ -96,7 +96,8 @@ body {
 
 @media only screen and (max-width: 900px) {
     .container {
-        left: 5vw;
+        top: 25vh;
+        left: 15vw;
     }
 }
 

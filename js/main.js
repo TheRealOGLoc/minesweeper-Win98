@@ -823,7 +823,7 @@ const quitGame = function() {
 // Show the game
 const showGame = function() {
     containerEl.style.display = "block";
-    minesweeperTaskEl.style.display = "block";
+    minesweeperTaskEl.style.display = "flex";
 }
 
 // The minimum button's hide game feature
