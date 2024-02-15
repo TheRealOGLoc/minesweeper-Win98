@@ -112,7 +112,7 @@ const gameDifficulty = {
 }
 
 // Width and height of a mine cell
-const mineSize = 20; // change the mineSize must change the size in css as well
+const mineSize = 25; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
 const state = {
