@@ -112,7 +112,7 @@ const gameDifficulty = {
 }
 
 // Width and height of a mine cell
-const mineSize = 10; // change the mineSize must change the size in css as well
+const mineSize = 20; // change the mineSize must change the size in css as well
 
 /*----- state variables -----*/
 const state = {
@@ -195,7 +195,7 @@ const init = function(difficulty) {
 
 // Set the minesEl's width and height
 const setElementsSize = function() {
-    containerEl.style.width = `${mineSize * state.size.column + 16}px`
+    containerEl.style.width = `${mineSize * state.size.column + 32}px`
     minesEl.style.width = `${mineSize * state.size.column}px`
     minesEl.style.height = `${mineSize * state.size.row}px`
 }
