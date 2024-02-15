@@ -149,7 +149,11 @@ const beginnerGameButtonEl = document.getElementById("beginner-game");
 const intermediateGameButtonEl = document.getElementById("intermediate-game");
 const expertGameButtonEl = document.getElementById("expert-game");
 const menusContentEl = document.querySelectorAll(".menu-content");
-
+const minesweeperTaskEl = document.querySelector(".minesweeper-task")
+const titleQuitButtonEl = document.getElementById("quit");
+const menuQuitButtonEl = document.getElementById("menu-quit");
+const minesweeperGameIconEl = document.getElementById("minesweeper-program");
+const titleMinimumButtonEl = document.getElementById("minimum");
 
 /*----- classes -----*/
 
@@ -809,7 +813,29 @@ function onMouseMove(event) {
     containerEl.style.left = newX + "px";
     containerEl.style.top = newY + "px";
 }
-   
+
+// Quit current game
+const quitGame = function() {
+    containerEl.style.display = "none";
+    minesweeperTaskEl.style.display = "none";
+}
+
+// Show the game
+const showGame = function() {
+    containerEl.style.display = "block";
+    minesweeperTaskEl.style.display = "block";
+}
+
+// The minimum button's hide game feature
+const minimumOrshowGame = function() {
+    if (containerEl.style.display === "none") {
+        containerEl.style.display = "block";
+        minesweeperTaskEl.classList.remove("minimum-status");
+    } else {
+        containerEl.style.display = "none";
+        minesweeperTaskEl.classList.add("minimum-status");
+    }
+}
 
 // All left click function wrapper
 const leftClickHandler = function(evt) {
@@ -868,6 +894,14 @@ const restartGame = function(difficulty) {
     bindEventListener();
 } 
 
+// Double click to restart the game
+const restartBeginnerGameByIcon = function() {
+    if (containerEl.style.display === "none") {
+        restartBeginnerGame();
+        showGame();
+    }
+}
+
 // Restart a beginner game
 const restartBeginnerGame = function() {
     restartGame(gameDifficulty.beginner);
@@ -916,6 +950,11 @@ const bindEventListener = function() {
     document.addEventListener("mouseup", function() {
         document.removeEventListener("mousemove", onMouseMove);
     });
+    titleQuitButtonEl.addEventListener("click", quitGame);
+    menuQuitButtonEl.addEventListener("click", quitGame);
+    minesweeperGameIconEl.addEventListener("dblclick", restartBeginnerGameByIcon);
+    titleMinimumButtonEl.addEventListener("click", minimumOrshowGame);
+    minesweeperTaskEl.addEventListener("click", minimumOrshowGame);
 }
 // Disable the right click menu
 document.addEventListener('contextmenu', event => event.preventDefault());
