@@ -138,7 +138,11 @@ const mineLeftUnitsEl = document.querySelector(".mine-left-units");
 const timerHundredsEl = document.querySelector(".timer-hundreds");
 const timerTensEl = document.querySelector(".timer-tens");
 const timerUnitsEl = document.querySelector(".timer-units");
-const restartButtonEl = document.querySelector(".restart")
+const restartButtonEl = document.querySelector(".restart");
+const gameMenuButtonEl = document.getElementById("game-menu-btn");
+const helpMenuButtonEl = document.getElementById("help-menu-btn");
+const gameMenuContentEl = document.getElementById("game-content");
+const helpMenuContentEl = document.getElementById("help-content");
 
 /*----- classes -----*/
 
@@ -162,6 +166,23 @@ class Timer {
             this.tens = 0;
         }
         return [this.hundreds, this.tens, this.units];
+    }
+}
+
+class MenuContent {
+    static gameMenuOpen = false;
+    static helpMenuOpen = false;
+    static openGameMenu = () => {
+        this.gameMenuOpen = true;
+        this.helpMenuOpen = false;
+    }
+    static openHelpMenu = () => {
+        this.gameMenuOpen = false;
+        this.helpMenuOpen = true;
+    }
+    static closeAllMenu = () => {
+        this.gameMenuOpen = false;
+        this.helpMenuOpen = false;
     }
 }
 
@@ -195,7 +216,7 @@ const init = function(difficulty) {
 
 // Set the minesEl's width and height
 const setElementsSize = function() {
-    containerEl.style.width = `${mineSize * state.size.column + 32}px`
+    containerEl.style.width = `${mineSize * state.size.column + 28}px`
     minesEl.style.width = `${mineSize * state.size.column}px`
     minesEl.style.height = `${mineSize * state.size.row}px`
 }
@@ -596,6 +617,10 @@ const changeRestartButtonImage = function(event) {
         removeRestartButtonClass();
         restartButtonEl.classList.add(restartButtonClassName.playing);
     }
+}
+
+const showMenuContent = function() {
+
 }
 
 // When mouse down

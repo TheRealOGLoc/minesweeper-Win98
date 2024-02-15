@@ -4,7 +4,7 @@
     --icon-size: 25px;
     --title-bar-height: 31.25px;
     --game-name-font-size: 23px;
-    --letter-space: 1.75px;
+    --letter-space: 1.25px;
     --font-weight: 550;
     --window-border-width: 1.25px;
     --background-color: rgb(0, 128, 128);
@@ -73,6 +73,10 @@ body {
     background-color: rgb(9, 9, 171);
     height: var(--title-bar-height);
     align-items: center;
+}
+
+.title-bar:hover {
+    cursor: default;
 }
 
 .container {
@@ -213,6 +217,7 @@ li {
 li:hover {
     background-color: rgb(9, 9, 171);
     color: white;
+    cursor: default;
 }
 
 .menus span {
@@ -223,10 +228,10 @@ li:hover {
     display: none;
     font-size: 17.5px;
     padding: 1.25px;
-    border-top: 1.25px solid rgb(253, 255, 255);
-    border-left: 1.25px solid rgb(253, 255, 255);
-    border-right: 1.25px solid grey;
-    border-bottom: 1.25px solid grey;
+    border-top: 1.75px solid rgb(253, 255, 255);
+    border-left: 1.75px solid rgb(253, 255, 255);
+    border-right: 1.5px solid grey;
+    border-bottom: 1.5px solid grey;
     position: absolute;
     background-color: rgb(195, 195, 195);
     text-align: left;
@@ -235,9 +240,23 @@ li:hover {
     top: 32.5px;
     left: 2.5px;
     width: 150px;
-    letter-spacing: 1.25px;
+    letter-spacing: 1px;
     box-shadow: 1.25px 1.25px rgb(0, 0, 0);
 }
+
+.show-menu-content {
+    display: block;
+}
+
+.grey-text {
+    color: gray;
+    text-shadow: 1px 1px white;
+}
+
+.grey-text:hover {
+    color: gray;
+}
+
 
 #help-content {
     left: 62.5px;
