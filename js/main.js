@@ -143,6 +143,12 @@ const gameMenuButtonEl = document.getElementById("game-menu-btn");
 const helpMenuButtonEl = document.getElementById("help-menu-btn");
 const gameMenuContentEl = document.getElementById("game-content");
 const helpMenuContentEl = document.getElementById("help-content");
+const newGameButtonEl = document.getElementById("new-game");
+const beginnerGameButtonEl = document.getElementById("beginner-game");
+const intermediateGameButtonEl = document.getElementById("intermediate-game");
+const expertGameButtonEl = document.getElementById("expert-game");
+const menusContentEl = document.querySelectorAll(".menu-content");
+
 
 /*----- classes -----*/
 
@@ -184,6 +190,9 @@ class MenuContent {
         this.gameMenuOpen = false;
         this.helpMenuOpen = false;
     }
+    static getMenusCondition = () => {
+        return [this.gameMenuOpen, this.helpMenuOpen];
+    }
 }
 
 /*----- functions -----*/
@@ -194,7 +203,7 @@ const init = function(difficulty) {
         state.level = level.beginner;
         state.mineLeft = level.beginner;
     } else if (difficulty === gameDifficulty.intermediate) {
-        state,difficulty = gameDifficulty.intermediate
+        state.difficulty = gameDifficulty.intermediate
         state.size = intermediateSize;
         state.level = level.intermediate;
         state.mineLeft = level.intermediate;
@@ -619,9 +628,67 @@ const changeRestartButtonImage = function(event) {
     }
 }
 
-const showMenuContent = function() {
 
+// Change the open condition of menu
+const changeMenuCondition = function(menu) {
+    if (menu === "game-menu-btn") {
+        MenuContent.openGameMenu();
+    } else if (menu === "help-menu-btn") {
+        MenuContent.openHelpMenu();
+    }
 }
+
+// Avoid bug if click on the menu's span
+const IDConvertor = function(id) {
+    const gameMenuSpan = "game-menu-btn-span";
+    const helpMenuSpan = "help-menu-btn-span";
+    if (id === "game-menu-btn" || id === "help-menu-btn") {
+        return id;
+    } else if (id === gameMenuSpan) {
+        return "game-menu-btn";
+    } else if (id === helpMenuSpan) {
+        return "help-menu-btn";
+    }
+}
+
+// Open game or help menu
+const showMenuContent = function(evt) {
+    const target = evt.target;
+    const id = IDConvertor(target.id);
+    changeMenuCondition(id);
+    const menuConditions = MenuContent.getMenusCondition();
+    if (menuConditions[0]) {
+        gameMenuContentEl.classList.add("show-menu-content");
+        helpMenuContentEl.classList.remove("show-menu-content")
+    } if (menuConditions[1]) {
+        helpMenuContentEl.classList.add("show-menu-content");
+        gameMenuContentEl.classList.remove("show-menu-content")
+    } 
+}
+
+// Close all menus
+const closeAllMenu = function() {
+    MenuContent.closeAllMenu();
+    gameMenuContentEl.classList.remove("show-menu-content");
+    helpMenuContentEl.classList.remove("show-menu-content");
+}
+
+// If the menu is opened and the click target is not menu, close menu
+const closeAllMenuIfOut = function(evt) {
+    const target = evt.target;
+    const tagName = target.tagName;
+    const menuConditions = MenuContent.getMenusCondition();
+    if (menuConditions[0] || menuConditions[1]) {
+        if (tagName !== "LI" &&
+            tagName !== "UL" &&
+            tagName !== "BUTTON" &&
+            tagName !== "SPAN") {
+            closeAllMenu();
+        }
+    }
+}
+
+
 
 // When mouse down
 const changeImageToPress = function(evt) {
@@ -754,8 +821,22 @@ const restartGame = function(difficulty) {
         init(currentDifficulty);
     }
     changeRestartButtonImage("playing");
+    closeAllMenu();
     bindEventListener();
 } 
+
+const restartBeginnerGame = function() {
+    restartGame(gameDifficulty.beginner);
+}
+
+const restartIntermediateGame = function() {
+    restartGame(gameDifficulty.intermediate);
+}
+
+const restartExpertGame = function() {
+    restartGame(gameDifficulty.expert);
+}
+
 
 // Render all the content
 const render = function() {
@@ -777,8 +858,15 @@ const bindEventListener = function() {
             target.addEventListener("contextmenu", rightClickHandler);
         }
     }
+    newGameButtonEl.addEventListener("click", restartGame);
+    beginnerGameButtonEl.addEventListener("click", restartBeginnerGame);
+    intermediateGameButtonEl.addEventListener("click", restartIntermediateGame);
+    expertGameButtonEl.addEventListener("click", restartExpertGame);
     restartButtonEl.addEventListener("click", restartGame);
+    gameMenuButtonEl.addEventListener("click", showMenuContent);
+    helpMenuButtonEl.addEventListener("click", showMenuContent);
 }
 // Disable the right click menu
 document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener("click", closeAllMenuIfOut);
 bindEventListener();
