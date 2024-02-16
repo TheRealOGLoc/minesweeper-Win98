@@ -594,7 +594,7 @@ const showAllMinesAndCheckFlag = function() {
 
 // Add or minus the number of mins left
 const changeMineLeft = function(add) {
-    if (add) {
+    if (add && state.mineLeft !== 0) {
         state.mineLeft--;
     } else {
         state.mineLeft++
@@ -605,7 +605,7 @@ const changeMineLeft = function(add) {
 const flagTargetCell = function(row, column) {
     const status = state.status[row][column];
     // If the cell is unopened, put flag on it
-    if (status === statusName.unopened) {
+    if (status === statusName.unopened && state.mineLeft !== 0) {
         updateTargetElStatus(row, column, statusName.flagged);
         updateTargetElClassList(row, column);
         changeMineLeft(true);
