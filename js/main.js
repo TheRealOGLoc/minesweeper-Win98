@@ -775,9 +775,7 @@ const changeImageToUnopen = function(evt) {
         }
         // If the target cell is opened number cell
         changeNearbyImage(id[0], id[1], status, mines, true);
-        if (evt.type !== "mouseout") {
-            changeRestartButtonImage("mouseup");
-        }
+        changeRestartButtonImage("mouseup");
     }
 }
 
