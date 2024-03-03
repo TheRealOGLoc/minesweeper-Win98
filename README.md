@@ -8,7 +8,7 @@
 
 ## Where to play? 🎮
 
-[Minesweeper Win98] (https://therealogloc.github.io/minesweeper/)
+[Minesweeper Win98] (https://therealogloc.github.io/minesweeper-Win98/)
 
 ## How to play 💣
 
